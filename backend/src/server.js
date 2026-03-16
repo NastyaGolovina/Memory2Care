@@ -1,12 +1,17 @@
-import express from "express"
-import userRoutes from "./routes/userRoutes.js"
+const express      = require('express');
+const cookieParser = require('cookie-parser');
 
-const app = express()
+const authRoutes = require('./routes/authRoutes');
+// const userRoutes = require('./routes/userRoutes');
 
-app.use(express.json())
+const app = express();
 
-app.use("/api/users", userRoutes)
+app.use(express.json());
+app.use(cookieParser());
+
+app.use('/api/auth',  authRoutes);
+// app.use('/api/users', userRoutes);
 
 app.listen(3000, () => {
-    console.log("Server running on port 3000")
-})
+    console.log('Server running on port 3000');
+});

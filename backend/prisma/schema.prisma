@@ -41,6 +41,7 @@ model User {
 
     Patient Patient[]
     Caregiver Caregiver[]
+
 }
 
 model Patient {
@@ -52,7 +53,7 @@ model Patient {
   phone         String           @db.Char(50)
   patient_code  String            @db.Char(50)
   diagnosis     String           @db.Char(225)
-  birth_date    DateTime         @db.Date
+  birth_date    String            @db.Char(100)
   name          String           @db.Char(50)
   active        Boolean           @default(true)
 
@@ -68,7 +69,7 @@ model Caregiver {
   name                String           @db.Char(50)
   phone               String           @db.Char(255)
   approved            Boolean          @default(false)
-  approved_date_time  DateTime
+  approved_date_time  DateTime?
 
   patients            PatientCaregiver[]
 }
@@ -149,3 +150,4 @@ model SiteContent {
   page_type    PageType
   language     Language
 }
+
