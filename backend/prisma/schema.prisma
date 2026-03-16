@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  ADMIN
+  PATIENT
+  CAREGIVER
+}
+
+enum RelationshipType {
+  FAMILY_MEMBER
+  INFORMAL_CARETAKER
+  MEDICAL_CARETAKER
+}
+
+enum SupportLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+    user_id           Int       @id @default(autoincrement())
+    email             String    @unique @db.VarChar(255)
+    password          String    @db.VarChar(255)
+    role              Role      @default(PATIENT)
+    created_date_time DateTime  @default(now())
+
+    Patient Patient[]
+    Caregiver Caregiver[]
+}
+
+model Patient {
+  patient_id    Int               @id @default(autoincrement())
+  user_id       Int
+  user          User              @relation(fields: [user_id], references: [user_id])
+
+  address       String           @db.Char(225)
+  phone         String           @db.Char(50)
+  patient_code  String            @db.Char(50)
+  diagnosis     String           @db.Char(225)
+  birth_date    DateTime         @db.Date
+  name          String           @db.Char(50)
+  active        Boolean           @default(true)
+
+  caregivers    PatientCaregiver[]
+}
+
+model Caregiver {
+  caregiver_id        Int               @id @default(autoincrement())
+  user_id             Int
+  user                User              @relation(fields: [user_id], references: [user_id])
+
+  address             String           @db.Char(255)
+  name                String           @db.Char(50)
+  phone               String           @db.Char(255)
+  approved            Boolean          @default(false)
+  approved_date_time  DateTime
+
+  patients            PatientCaregiver[]
+}
+
+
+model PatientCaregiver {
+  pc_id               Int              @id @default(autoincrement())
+  patient_id          Int
+  caregiver_id        Int
+
+  patient             Patient          @relation(fields: [patient_id], references: [patient_id])
+  caregiver           Caregiver        @relation(fields: [caregiver_id], references: [caregiver_id])
+
+  relationship        RelationshipType
+  support_level       SupportLevel
+  approx_age          Int
+  anon_name           String           @db.Char(225)
+  active              Boolean          @default(true)
+  assignment_date     DateTime
+
+  tasks               Task[]
+
+  @@map("Patient_Caregiver")
+}
+
+model TaskType {
+  task_type_id    Int     @id @default(autoincrement())
+  task_type_name  String? @db.Char(225)
+  type_desc       String? @db.Char(225)
+
+  tasks           Task[]
+}
+
+model Task {
+  task_id             Int              @id @default(autoincrement())
+  pc_id               Int
+  task_type_id        Int
+
+  pc                  PatientCaregiver @relation(fields: [pc_id], references: [pc_id])
+  task_type           TaskType         @relation(fields: [task_type_id], references: [task_type_id])
+
+  recurrence_task_id  String
+
+  task_description    String           @db.Char(225)
+  execution_date      DateTime         @db.Date
+  end_date            DateTime         @db.Date
+  creation_date       DateTime         @default(now())
+  is_recurring        Boolean
+  recurrence_rule     String?          @db.Char(225)
+  // может быть что то еще
+  is_completed        Boolean          @default(false)
+}
+
+
+enum PageType {
+  MAIN_PAGE
+  NEWS
+  ABOUT_US
+}
+
+enum Language {
+  ENGLISH
+  PORTUGUESE
+}
+
+model Log {
+  log_id          Int      @id @default(autoincrement())
+  log_datetime    DateTime
+  log_description String?  @db.Char(225)
+  login           String?  @db.Char(225)
+}
+
+model SiteContent {
+  content_id   Int       @id @default(autoincrement())
+  text         String    @db.VarChar(2000)
+  news_author  String    @db.Char(225)
+  news_date    DateTime  @db.Date
+  page_type    PageType
+  language     Language
+}
