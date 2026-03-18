@@ -98,7 +98,7 @@ async function createUserEntity(email, password, role) {
     return user;
 }
 
-export const approveCaregiver = async (data) => {
+const approveCaregiver = async (data) => {
     const now = DateTime.now();
     const caregiver = await prisma.caregiver.findFirst({
         where: { user_id: data.user_id },
@@ -115,7 +115,7 @@ export const approveCaregiver = async (data) => {
 }
 
 
-export const loginUser = async (data) => {
+const loginUser = async (data) => {
     const email = data.email;
     const password = data.password;
     const existingUser = await prisma.user.findUnique({
