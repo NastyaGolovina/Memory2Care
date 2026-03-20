@@ -8,6 +8,6 @@ router.post('/signup',  signup);
 router.post('/login',   login);
 router.post('/refresh', refresh);
 router.post('/logout',  logout);
-router.post('/approve/caregiver', authenticate,  approveCaregiverEntity);
+router.post('/caregiver/approve', authenticate,  approveCaregiverEntity);
 
 module.exports = router;
