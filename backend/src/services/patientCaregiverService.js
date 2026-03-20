@@ -73,4 +73,38 @@ const createPatientCaregiver = async (data) => {
 
 }
 
-module.exports = { createPatientCaregiver };
+
+const updatePatientCaregiver = async (data) => {
+
+    const pcId   = data.pc_id;
+    const approxAge   = data.approx_age;
+    const anonName    = data.anon_name;
+
+
+    const patient_caregiver = await prisma.PatientCaregiver.findFirst({
+        where: { pc_id: pcId },
+    });
+
+
+
+    if (!patient_caregiver) throw new Error('Assignment not found');
+    if (!patient_caregiver.active) throw new Error('Assignment is not active');
+
+
+    if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
+    if (typeof anonName !== 'string' || anonName.length <= 0) throw new Error('Invalid anonymous name');
+
+
+    const updatedPatientCaregiver = await prisma.PatientCaregiver.update({
+        where: { pc_id: pcId },
+        data: {
+            approx_age : approxAge,
+            anon_name : anonName
+        }
+    });
+
+    return updatedPatientCaregiver;
+
+}
+
+module.exports = { createPatientCaregiver,updatePatientCaregiver };

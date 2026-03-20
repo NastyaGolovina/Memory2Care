@@ -9,6 +9,8 @@ const deactivatePatient = async (data) => {
         where: { user_id: data.user_id },
     })
 
+    // validations
+
     const updated = await prisma.patient.update({
         where: { patient_id: patient.patient_id },
         data: {
