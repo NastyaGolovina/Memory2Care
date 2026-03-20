@@ -1,15 +1,16 @@
-const { createUser, loginUser } = require("../services/userService.js");
+const { createUser, loginUser, approveCaregiver } = require("../services/userService.js");
 const { generateAccessToken, generateRefreshToken } = require('../services/cryptoService');
 const prisma = require('../config/prismaClient');
+const { successResponse, errorResponse } = require('../models/response');
 
 
 async function signup(req, res) {
     try {
         const user = await createUser(req.body)
         if(user.role === 'CAREGIVER') {
-            return res.status(201).json({
+            return res.status(201).json(successResponse({
                 message: 'Account created, please wait for confirmation'
-            });
+            }));
         }
         const accessToken  = generateAccessToken(user.user_id, user.role);
         const refreshToken = generateRefreshToken(user.user_id);
@@ -21,10 +22,15 @@ async function signup(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.status(201).json({ accessToken });
+        res.status(201).json(successResponse({ accessToken,
+        user : {
+            user_id: user.user_id,
+            email:   user.email,
+            role:    user.role
+        }}));
 
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json(errorResponse(err.message, 'SIGNUP_ERROR'));
     }
 }
 
@@ -44,24 +50,26 @@ async function login(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.json({
+        res.status(200).json(successResponse({
             accessToken,
             user: {
-                user_id:           user.user_id,
-                email:             user.email,
-                role:              user.role,
-                profile:           user.profile
+                user_id: user.user_id,
+                email:   user.email,
+                role:    user.role,
+                profile: user.profile
             }
-        });
+        }));
+
     } catch (err) {
-        res.status(500).json({ error: 'Ошибка сервера' });
+        res.status(400).json(errorResponse(err.message, 'LOGIN_ERROR'));
     }
 }
 
 
 async function refresh(req, res) {
     const token = req.cookies.refreshToken; // берём из cookie
-    if (!token) return res.status(401).json({ error: 'No refresh token' });
+    if (!token) return res.status(401).json(errorResponse('No refresh token', 'NO_REFRESH_TOKEN'));
+
 
     try {
         const { verifyRefreshToken, generateAccessToken } = require('../services/cryptoService');
@@ -69,20 +77,42 @@ async function refresh(req, res) {
 
 
         const user = await prisma.user.findUnique({ where: { user_id: decoded.user_id } });
-        if (!user) return res.status(401).json({ error: 'user not found' });
+        if (!user) return res.status(401).json(errorResponse('User not found', 'USER_NOT_FOUND'));
 
         const newAccessToken = generateAccessToken(user.user_id, user.role);
-        res.json({ accessToken: newAccessToken });
-    } catch (err) {
 
-        res.status(403).json({ error: 'Session expired, please log in again' });
+        res.status(200).json(successResponse({ accessToken: newAccessToken }));
+
+    } catch (err) {
+        res.status(403).json(errorResponse('Session expired, please log in again', 'SESSION_EXPIRED'));
     }
 }
 
 async function logout(req, res) {
 
     res.clearCookie('refreshToken');
-    res.json({ message: 'Exited successfully' });
+    res.status(200).json(successResponse({ message: 'Exited successfully' }));
 }
 
-module.exports = { signup, login, refresh, logout };
+async function approveCaregiverEntity(req, res) {
+    try {
+        // if (req.user.role !== 'ADMIN') {
+        //     return res.status(403).json(errorResponse('Access denied', 'FORBIDDEN'));
+        // }
+
+        const c = await   approveCaregiver(req.body)
+        res.status(200).json(successResponse({
+            user: {
+                user_id: c.user_id,
+                approved: c.approved,
+                approved_date_time:  c.approved_date_time,
+            }
+        }));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'APPROVE_ERROR'));
+    }
+
+}
+
+
+module.exports = { signup, login, refresh, logout,approveCaregiverEntity };

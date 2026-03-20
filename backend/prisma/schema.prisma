@@ -54,12 +54,12 @@ model Patient {
   user_id       Int
   user          User              @relation(fields: [user_id], references: [user_id])
 
-  address       String           @db.Char(225)
-  phone         String           @db.Char(50)
-  patient_code  String            @db.Char(50)
-  diagnosis     String           @db.Char(225)
-  birth_date    String            @db.Char(100)
-  name          String           @db.Char(50)
+  address       String  @db.VarChar(1000)
+  phone         String  @db.VarChar(1000)
+  patient_code  String  @db.VarChar(1000)
+  diagnosis     String  @db.VarChar(1000)
+  birth_date    String  @db.VarChar(1000)
+  name          String  @db.VarChar(1000)
   active        Boolean           @default(true)
 
   caregivers    PatientCaregiver[]

@@ -16,6 +16,7 @@ const createUser = async (data) => {
     const email = data.email;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const role = data.role;
+    const password = data.password;
 
 
     if (!emailRegex.test(email)) {
@@ -42,41 +43,78 @@ const createUser = async (data) => {
             throw new Error('Invalid phone number format.');
         }
 
-        const user = await createUserEntity(data.email, data.password, role);
-        await prisma.patient.create({
-            data: {
-                user_id: user.user_id,
-                address : encrypt(data.address),
-                phone : encrypt(data.phone),
-                patient_code : generateGUID(),
-                diagnosis : encrypt(data.diagnosis),
-                birth_date: encrypt(data.birth_date.toString()),
-                name   : encrypt(data.name),
-                active :  true
-            }
+        return await prisma.$transaction(async (tx) => {
+            const user = await createUserEntity(tx, email, password, role);
+
+            await tx.patient.create({
+                data: {
+                    user_id:      user.user_id,
+                    address:      encrypt(data.address),
+                    phone:        encrypt(data.phone),
+                    patient_code: generateGUID(),
+                    diagnosis:    encrypt(data.diagnosis),
+                    birth_date:   encrypt(data.birth_date.toString()),
+                    name:         encrypt(data.name),
+                    active:       true
+                }
+            });
+
+            return user;
         });
-        return user;
+
+        // const user = await createUserEntity(data.email, data.password, role);
+        // await prisma.patient.create({
+        //     data: {
+        //         user_id: user.user_id,
+        //         address : encrypt(data.address),
+        //         phone : encrypt(data.phone),
+        //         patient_code : generateGUID(),
+        //         diagnosis : encrypt(data.diagnosis),
+        //         birth_date: encrypt(data.birth_date.toString()),
+        //         name   : encrypt(data.name),
+        //         active :  true
+        //     }
+        // });
+        // return user;
     } else if (role === 'CAREGIVER') {
+        const phone = data.phone;
         const phoneRegex = /^\+?\d{1,4}?[-.\s]?\(?\d{1,4}?\)?([-.\s]?\d{1,9}){1,3}$/;
 
         if (!phoneRegex.test(phone)) {
             throw new Error('Invalid phone number format.');
         }
-        const user = await createUserEntity(data.email, data.password, role);
-        await prisma.caregiver.create({
-            data: {
-                user_id: user.user_id,
-                address :  data.address,
-                name     :  data.name,
-                phone  :  data.phone,
-                approved : false,
-                approved_date_time : null
-            }
+        return await prisma.$transaction(async (tx) => {
+            const user = await createUserEntity(tx, email, password, role);
+
+            await tx.caregiver.create({
+                data: {
+                    user_id:            user.user_id,
+                    address:            data.address,
+                    name:               data.name,
+                    phone:              data.phone,
+                    approved:           false,
+                    approved_date_time: null
+                }
+            });
+
+            return user;
         });
-        return user;
+        // const user = await createUserEntity(data.email, data.password, role);
+        // await prisma.caregiver.create({
+        //     data: {
+        //         user_id: user.user_id,
+        //         address :  data.address,
+        //         name     :  data.name,
+        //         phone  :  data.phone,
+        //         approved : false,
+        //         approved_date_time : null
+        //     }
+        // });
+        // return user;
     } else if (role === 'ADMIN') {
-        const user = await createUserEntity(email, password, role);
-        return user;
+        return await prisma.$transaction(async (tx) => {
+            return await createUserEntity(tx, email, password, role);
+        });
     } else {
         throw new Error('Wrong users role');
     }
@@ -84,15 +122,15 @@ const createUser = async (data) => {
 
 }
 
-async function createUserEntity(email, password, role) {
+async function createUserEntity(tx,email, password, role) {
     const now = DateTime.now();
     const hashedPassword = await hashPassword(password);
-    const user = await prisma.user.create({
+    const user = await tx.user.create({
         data: {
             email: email,
             password: hashedPassword,
             role: role,
-            created_date_time : now.toFormat('yyyy-MM-dd HH:mm:ss')
+            created_date_time : now.toJSDate()
         }
     })
     return user;
@@ -104,14 +142,14 @@ const approveCaregiver = async (data) => {
         where: { user_id: data.user_id },
     })
 
-    await prisma.caregiver.update({
-
+    const updated = await prisma.caregiver.update({
         where: { caregiver_id: caregiver.caregiver_id },
         data: {
-            approved:           true,
-            approved_date_time:  now.toFormat('yyyy-MM-dd HH:mm:ss'),
+            approved: true,
+            approved_date_time: now.toJSDate(),
         }
     })
+    return updated;
 }
 
 
@@ -144,7 +182,7 @@ const loginUser = async (data) => {
             phone:        decrypt(p.phone),
             address:      decrypt(p.address),
             diagnosis:    decrypt(p.diagnosis),
-            birth_date:   p.birth_date,
+            birth_date:   decrypt(p.birth_date),
             patient_code: p.patient_code,
             active:       p.active
         };
