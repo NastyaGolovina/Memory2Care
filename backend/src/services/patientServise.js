@@ -9,7 +9,6 @@ const deactivatePatient = async (data) => {
         where: { user_id: data.user_id },
     })
 
-    // validations
     await prisma.PatientCaregiver.updateMany({
         where: {patient_id: patient.patient_id},
         data: {
