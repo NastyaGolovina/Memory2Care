@@ -1,7 +1,7 @@
-const { deactivatePatient } = require("../services/patientServise.js");
+const { deactivatePatient, searchPatient } = require("../services/patientServise.js");
 const prisma = require('../config/prismaClient');
 const { successResponse, errorResponse } = require('../models/response');
-const {approveCaregiver} = require("../services/userService");
+
 
 
 async function deactivatePatientEntity(req, res) {
@@ -21,5 +21,19 @@ async function deactivatePatientEntity(req, res) {
 }
 
 
+async function findPatient(req, res) {
+    try {
 
-module.exports = {deactivatePatientEntity};
+        const p = await searchPatient(req.body)
+        res.status(200).json(successResponse(p));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'FIND_PATIENT_ERROR'));
+    }
+
+}
+
+
+
+
+
+module.exports = {deactivatePatientEntity, findPatient};
