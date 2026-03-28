@@ -136,21 +136,21 @@ async function createUserEntity(tx,email, password, role) {
     return user;
 }
 
-const approveCaregiver = async (data) => {
-    const now = DateTime.now();
-    const caregiver = await prisma.caregiver.findFirst({
-        where: { user_id: data.user_id },
-    })
-
-    const updated = await prisma.caregiver.update({
-        where: { caregiver_id: caregiver.caregiver_id },
-        data: {
-            approved: true,
-            approved_date_time: now.toJSDate(),
-        }
-    })
-    return updated;
-}
+// const approveCaregiver = async (data) => {
+//     const now = DateTime.now();
+//     const caregiver = await prisma.caregiver.findFirst({
+//         where: { user_id: data.user_id },
+//     })
+//
+//     const updated = await prisma.caregiver.update({
+//         where: { caregiver_id: caregiver.caregiver_id },
+//         data: {
+//             approved: true,
+//             approved_date_time: now.toJSDate(),
+//         }
+//     })
+//     return updated;
+// }
 
 
 const loginUser = async (data) => {
@@ -205,4 +205,5 @@ const loginUser = async (data) => {
     };
 }
 
-module.exports = { createUser, approveCaregiver, loginUser };
+// module.exports = { createUser, approveCaregiver, loginUser };
+module.exports = { createUser, loginUser };

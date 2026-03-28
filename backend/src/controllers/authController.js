@@ -1,4 +1,5 @@
-const { createUser, loginUser, approveCaregiver } = require("../services/userService.js");
+// const { createUser, loginUser, approveCaregiver } = require("../services/userService.js");
+const { createUser, loginUser } = require("../services/userService.js");
 const { generateAccessToken, generateRefreshToken } = require('../services/cryptoService');
 const prisma = require('../config/prismaClient');
 const { successResponse, errorResponse } = require('../models/response');
@@ -94,25 +95,26 @@ async function logout(req, res) {
     res.status(200).json(successResponse({ message: 'Exited successfully' }));
 }
 
-async function approveCaregiverEntity(req, res) {
-    try {
-        // if (req.user.role !== 'ADMIN') {
-        //     return res.status(403).json(errorResponse('Access denied', 'FORBIDDEN'));
-        // }
+// async function approveCaregiverEntity(req, res) {
+//     try {
+//         // if (req.user.role !== 'ADMIN') {
+//         //     return res.status(403).json(errorResponse('Access denied', 'FORBIDDEN'));
+//         // }
+//
+//         const c = await   approveCaregiver(req.body)
+//         res.status(200).json(successResponse({
+//             user: {
+//                 user_id: c.user_id,
+//                 approved: c.approved,
+//                 approved_date_time:  c.approved_date_time,
+//             }
+//         }));
+//     } catch (err) {
+//         res.status(400).json(errorResponse(err.message, 'APPROVE_ERROR'));
+//     }
+//
+// }
 
-        const c = await   approveCaregiver(req.body)
-        res.status(200).json(successResponse({
-            user: {
-                user_id: c.user_id,
-                approved: c.approved,
-                approved_date_time:  c.approved_date_time,
-            }
-        }));
-    } catch (err) {
-        res.status(400).json(errorResponse(err.message, 'APPROVE_ERROR'));
-    }
 
-}
-
-
-module.exports = { signup, login, refresh, logout,approveCaregiverEntity };
+// module.exports = { signup, login, refresh, logout,approveCaregiverEntity };
+module.exports = { signup, login, refresh, logout };
