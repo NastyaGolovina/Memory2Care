@@ -33,9 +33,16 @@ const createPatientCaregiver = async (data) => {
         where: { caregiver_id: caregiverId },
     });
 
-    const patient_caregiver = await prisma.PatientCaregiver.findFirst({
-        where: { caregiver_id: caregiverId,
-            patient_id: patientId },
+    // const patient_caregiver = await prisma.PatientCaregiver.findFirst({
+    //     where: { caregiver_id: caregiverId,
+    //         patient_id: patientId },
+    // });
+
+    const existingCaregiver = await prisma.PatientCaregiver.findFirst({
+        where: {
+            patient_id: patientId,
+            active: true
+        },
     });
 
 
@@ -46,7 +53,9 @@ const createPatientCaregiver = async (data) => {
     if (!caregiver)           throw new Error('Caregiver not found');
     if (!caregiver.approved)  throw new Error('Caregiver is not approved');
 
-    if (patient_caregiver && patient_caregiver.active) throw new Error('This caregiver is already assigned to this patient');
+    // if (patient_caregiver && patient_caregiver.active) throw new Error('This caregiver is already assigned to this patient');
+
+    if (existingCaregiver) throw new Error('Patient already has a caregiver');
 
     if (!Object.values(RelationshipType).includes(relationship)) throw new Error('Invalid relationship type');
     if (!Object.values(SupportLevel).includes(supportLevel))     throw new Error('Invalid support level');
@@ -107,4 +116,37 @@ const updatePatientCaregiver = async (data) => {
 
 }
 
-module.exports = { createPatientCaregiver,updatePatientCaregiver };
+
+const deletePatientCaregiver = async (data) => {
+
+    const pcId   = data.pc_id;
+
+    const patient_caregiver = await prisma.PatientCaregiver.findFirst({
+        where: { pc_id: pcId },
+    });
+
+
+
+    if (!patient_caregiver) throw new Error('Assignment not found');
+    if (!patient_caregiver.active) throw new Error('Assignment is not active');
+
+    // удалить таски
+
+    const updatedPatientCaregiver = await prisma.PatientCaregiver.update({
+        where: { pc_id: pcId },
+        data: {
+            active : false
+        }
+    });
+
+    return updatedPatientCaregiver;
+
+}
+
+
+
+
+
+
+
+module.exports = { createPatientCaregiver,updatePatientCaregiver,deletePatientCaregiver };
