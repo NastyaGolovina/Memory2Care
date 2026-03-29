@@ -61,7 +61,7 @@ const createPatientCaregiver = async (data) => {
     if (!Object.values(SupportLevel).includes(supportLevel))     throw new Error('Invalid support level');
 
     if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
-    if (typeof anonName !== 'string' || anonName.length <= 0) throw new Error('Invalid anonymous name');
+    if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
     const patientCaregiver = await prisma.PatientCaregiver.create({
@@ -101,7 +101,7 @@ const updatePatientCaregiver = async (data) => {
 
 
     if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
-    if (typeof anonName !== 'string' || anonName.length <= 0) throw new Error('Invalid anonymous name');
+    if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
     const updatedPatientCaregiver = await prisma.PatientCaregiver.update({
