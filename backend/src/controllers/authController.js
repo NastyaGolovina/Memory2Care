@@ -1,5 +1,5 @@
 // const { createUser, loginUser, approveCaregiver } = require("../services/userService.js");
-const { createUser, loginUser } = require("../services/userService.js");
+const { createUser, loginUser, writeLog } = require("../services/userService.js");
 const { generateAccessToken, generateRefreshToken } = require('../services/cryptoService');
 const prisma = require('../config/prismaClient');
 const { successResponse, errorResponse } = require('../models/response');
@@ -51,7 +51,7 @@ async function login(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.status(200).json(successResponse({
+        let successMsg =  successResponse({
             accessToken,
             user: {
                 user_id: user.user_id,
@@ -59,10 +59,19 @@ async function login(req, res) {
                 role:    user.role,
                 profile: user.profile
             }
-        }));
+        })
+
+        // await writeLog(user.email,JSON.stringify(successMsg));
+        await writeLog(user.email,'Login successful');
+        res.status(200).json(successMsg);
 
     } catch (err) {
-        res.status(400).json(errorResponse(err.message, 'LOGIN_ERROR'));
+        const login = req.body.email ?? 'unknown';
+        let errorMsg = errorResponse(err.message, 'LOGIN_ERROR')
+        // await writeLog(login.email,JSON.stringify(errorMsg))
+        await writeLog(login,`Login failed: ${err.message}`)
+        res.status(400).json(errorMsg);
+        // res.status(400).json(errorResponse(err.message, 'LOGIN_ERROR'));
     }
 }
 

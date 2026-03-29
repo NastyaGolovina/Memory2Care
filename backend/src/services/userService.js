@@ -205,5 +205,19 @@ const loginUser = async (data) => {
     };
 }
 
+const writeLog = async (login,description) => {
+    const now = DateTime.now();
+
+    const log = await prisma.log.create({
+        data: {
+            log_datetime: now.toJSDate(),
+            log_description: description,
+            login: login,
+        }
+    })
+    return log;
+}
+
+
 // module.exports = { createUser, approveCaregiver, loginUser };
-module.exports = { createUser, loginUser };
+module.exports = { createUser, loginUser,writeLog };
