@@ -112,20 +112,30 @@ model Task {
   task_id             Int              @id @default(autoincrement())
   pc_id               Int
   task_type_id        Int
+  recurrence_rule_id  Int
 
   pc                  PatientCaregiver @relation(fields: [pc_id], references: [pc_id])
   task_type           TaskType         @relation(fields: [task_type_id], references: [task_type_id])
+  recurrence_rule     RecurrenceRule   @relation(fields: [recurrence_rule_id], references: [recurrence_rule_id])
 
-  recurrence_task_id  String
 
   task_description    String           @db.Char(225)
   execution_date      DateTime         @db.Date
   end_date            DateTime         @db.Date
-  creation_date       DateTime         @default(now())
-  is_recurring        Boolean
-  recurrence_rule     String?          @db.Char(225)
-  // может быть что то еще
+  start_date          DateTime         @db.Date
+  start_time          DateTime         @db.Time
+  end_time            DateTime         @db.Time
+  is_recurring        Boolean          @default(false)
   is_completed        Boolean          @default(false)
+}
+
+
+model RecurrenceRule {
+  recurrence_rule_id    Int              @id @default(autoincrement())
+  recurrence_pattern    String           @db.VarChar(1000)
+
+
+  Task Task[]
 }
 
 

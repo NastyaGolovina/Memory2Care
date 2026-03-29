@@ -76,13 +76,17 @@ function verifyRefreshToken(token) {
 }
 
 function generateGUID() {
-    // return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    //     const r = Math.random() * 16 | 0, // random integer between 0 and 15
-    //         v = c === 'x' ? r : (r & 0x3 | 0x8); // bitwise operations to handle 'y' and 'x'
-    //     return v.toString(16);
-    // });
-    return  crypto.randomBytes(4).toString('hex');
+     return  crypto.randomBytes(4).toString('hex');
 }
+
+function generateLongGUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, // random integer between 0 and 15
+            v = c === 'x' ? r : (r & 0x3 | 0x8); // bitwise operations to handle 'y' and 'x'
+        return v.toString(16);
+    });
+}
+
 
 module.exports = {
     hashPassword,
