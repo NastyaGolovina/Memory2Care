@@ -17,15 +17,6 @@ async function validateTaskType(task_type_name,type_desc) {
     }
 }
 
-
-// model TaskType {
-//     task_type_id    Int     @id @default(autoincrement())
-//     task_type_name  String? @db.Char(225)
-//         type_desc       String? @db.Char(225)
-//
-//         tasks           Task[]
-// }
-
 const createTaskType = async (data) => {
 
     const task_type_name   = data.task_type_name;

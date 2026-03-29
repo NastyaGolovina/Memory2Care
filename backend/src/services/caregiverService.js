@@ -19,4 +19,22 @@ const approveCaregiver = async (data) => {
 }
 
 
-module.exports = { approveCaregiver };
+const getAllPatientsForCaregiver = async (data) => {
+
+    const caregiver_id = Number(data.caregiver_id);
+
+    const patientCaregiversList = await prisma.patientCaregiver.findMany({
+        where: {
+            caregiver_id: caregiver_id,
+            active: true
+        }
+    });
+
+    return patientCaregiversList;
+
+}
+
+
+
+
+module.exports = { approveCaregiver, getAllPatientsForCaregiver};
