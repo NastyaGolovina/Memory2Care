@@ -6,8 +6,8 @@ const { successResponse, errorResponse } = require('../models/response');
 async function createTaskTypeEntity(req, res) {
     try {
 
-        const pc = await createTaskType(req.body)
-        res.status(200).json(successResponse(pc));
+        const tt = await createTaskType(req.body)
+        res.status(200).json(successResponse(tt));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'CREATE_ERROR'));
     }
@@ -17,8 +17,8 @@ async function createTaskTypeEntity(req, res) {
 async function updateTaskTypeEntity(req, res) {
     try {
 
-        const pc = await updateTaskType(req.body)
-        res.status(200).json(successResponse(pc));
+        const tt = await updateTaskType(req.body)
+        res.status(200).json(successResponse(tt));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'UPDATE_ERROR'));
     }
@@ -28,8 +28,8 @@ async function updateTaskTypeEntity(req, res) {
 async function deleteTaskTypeEntity(req, res) {
     try {
 
-        const pc = await deleteTaskType(req.body)
-        res.status(200).json(successResponse(pc));
+        const tt = await deleteTaskType(req.body)
+        res.status(200).json(successResponse(tt));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'DELETE_ERROR'));
     }
