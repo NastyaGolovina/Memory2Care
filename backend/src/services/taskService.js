@@ -433,36 +433,39 @@ const deleteTask = async (data) => {
     }
 }
 
-// const completeTask = async (data) => {
-//     const task_id = data.task_id;
-//
-//
-//     const existing_task = await prisma.task.findFirst({
-//         where: { task_id: task_id },
-//     });
-//
-//     if (!existing_task) throw new Error('Task not exist');
-//
-//     const task = await prisma.task.update({
-//         where: {
-//             task_id : task_id
-//         },
-//         data: {
-//             is_completed : true
-//         }
-//     });
-//
-//     return task
-//
-// }
-
 const completeTask = async (data) => {
-    const task = await prisma.task.update({
-        where: { task_id: data.task_id },
-        data: { is_completed: true }
+    const task_id = data.task_id;
+
+
+    const existing_task = await prisma.task.findFirst({
+        where: { task_id: task_id },
     });
 
-    return task;
-};
+    if (!existing_task) throw new Error('Task not exist');
+
+    const task = await prisma.task.update({
+        where: {
+            task_id : task_id
+        },
+        data: {
+            is_completed : true
+        }
+    });
+
+    return task
+
+}
+
+// const completeTask = async (data) => {
+//     const task = await prisma.task.update({
+//         where: { task_id: data.task_id },
+//         data: { is_completed: true }
+//     });
+//
+//     return task;
+// };
+
+
+
 
 module.exports = { createTask, createRecurrenceTask, updateTask, deleteTask, completeTask };
