@@ -106,6 +106,8 @@ model TaskType {
   type_desc       String? @db.VarChar(225)
 
   tasks           Task[]
+
+  @@map("Task_Type")
 }
 
 model Task {
@@ -121,8 +123,6 @@ model Task {
 
   task_description    String           @db.VarChar(225)
   execution_date      DateTime         @db.Date
-  end_date            DateTime         @db.Date
-  start_date          DateTime         @db.Date
   start_time          DateTime         @db.Time
   end_time            DateTime         @db.Time
   is_recurring        Boolean          @default(false)
@@ -133,9 +133,13 @@ model Task {
 model RecurrenceRule {
   recurrence_rule_id    Int              @id @default(autoincrement())
   recurrence_pattern    String           @db.VarChar(1000)
+  end_date            DateTime         @db.Date
+  start_date          DateTime         @db.Date
 
 
   Task Task[]
+
+  @@map("Recurrence_Rule")
 }
 
 
@@ -164,6 +168,8 @@ model SiteContent {
   news_date    DateTime  @db.Date
   page_type    PageType
   language     Language
+
+  @@map("Site_Content")
 }
 
 //npx prisma migrate reset
