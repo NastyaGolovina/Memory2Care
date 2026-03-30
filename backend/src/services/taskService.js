@@ -1,5 +1,6 @@
 const prisma = require("../config/prismaClient.js");
 const { DateTime } = require('luxon');
+const {encrypt, generateGUID} = require("./cryptoService");
 
 
 
@@ -39,99 +40,8 @@ async function validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,e
     if (endTime <= startTime) throw new Error('End time must be later than start time');
 
 }
-const createTask = async (data) => {
 
-
-    const pcId   = data.pc_id;
-    const taskTypeId = data.task_type_id;
-    const taskDescription = data.task_description;
-    const executionDate =  DateTime.fromISO(data.execution_date);
-    const startTime   = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
-    const endTime    = DateTime.fromFormat(data.end_time,'HH:mm:ss');
-
-
-
-    await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
-    if (!executionDate) throw new Error('Execution date is required');
-
-    if (!executionDate.isValid) throw new Error('Execution date is not valid. Expected format: YYYY-MM-DD');
-
-
-    const task = await prisma.task.create({
-        data: {
-            pc_id: pcId,
-            task_type_id: taskTypeId,
-            recurrence_rule_id: null,
-            task_description: taskDescription,
-            execution_date : executionDate.toJSDate(),
-            start_time :  startTime.toJSDate(),
-            end_time : endTime.toJSDate(),
-            is_recurring : false,
-            is_completed : false
-
-        }
-    });
-
-    return task;
-
-
-}
-
-
-//
-//     "RecurrencePattern" :
-//     {
-//         "Type" : "Daily | Weekly | Monthly",
-//         "Daily" : {
-//         "Every" : 1,
-//             "EveryWeekday" : False
-//     },
-//         "Weekly" : {
-//         "RecurEveryWeek" : 1,
-//             "DayOfWeek" : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-// ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-//     }
-//         "Monthly" : {
-//         "Day" : 29,
-//         "EveryMonths" : 1
-//     }
-//     }
-// }
-//
-
-
-const createRecurrenceTask = async (data) => {
-
-    const pcId   = data.pc_id;
-    const taskTypeId = data.task_type_id;
-    const taskDescription = data.task_description;
-
-    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
-    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss');
-    // const recurrencePattern    = data.recurrence_pattern;
-    const recurrenceRule = typeof data.recurrence_pattern === 'string'
-        ? JSON.parse(data.recurrence_pattern)
-        : data.recurrence_pattern;
-    const startDate = DateTime.fromISO(data.start_date);
-    const endDate   = DateTime.fromISO(data.end_date);
-
-
-
-    await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
-
-
-
-    if (!startDate) throw new Error('Start date is required');
-    if (!endDate)   throw new Error('End date is required');
-
-    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
-    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
-    if (endDate <= startDate) throw new Error('End date must be later than start date');
-
-
-    if (!recurrenceRule || typeof recurrenceRule !== 'object') {
-        throw new Error('Recurrence pattern is required and must be a valid JSON object');
-    }
+function getRecurrenceTaskDates(recurrenceRule, startDate, endDate) {
 
     const type = recurrenceRule.RecurrencePattern.Type;
     const obj = recurrenceRule.RecurrencePattern[type];
@@ -208,6 +118,106 @@ const createRecurrenceTask = async (data) => {
         throw new Error('Wrong recurrence rule type')
     }
 
+    return executionDates;
+
+}
+const createTask = async (data) => {
+
+
+    const pcId   = data.pc_id;
+    const taskTypeId = data.task_type_id;
+    const taskDescription = data.task_description;
+    const executionDate =  DateTime.fromISO(data.execution_date);
+    const startTime   = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
+    const endTime    = DateTime.fromFormat(data.end_time,'HH:mm:ss');
+
+
+
+    await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
+    if (!executionDate) throw new Error('Execution date is required');
+
+    if (!executionDate.isValid) throw new Error('Execution date is not valid. Expected format: YYYY-MM-DD');
+
+
+    const task = await prisma.task.create({
+        data: {
+            pc_id: pcId,
+            task_type_id: taskTypeId,
+            recurrence_rule_id: null,
+            task_description: taskDescription,
+            execution_date : executionDate.toJSDate(),
+            start_time :  startTime.toJSDate(),
+            end_time : endTime.toJSDate(),
+            is_recurring : false,
+            is_completed : false
+
+        }
+    });
+
+    return task;
+
+
+}
+
+
+//
+//     "RecurrencePattern" :
+//     {
+//         "Type" : "Daily | Weekly | Monthly",
+//         "Daily" : {
+//         "Every" : 1,
+//             "EveryWeekday" : False
+//     },
+//         "Weekly" : {
+//         "RecurEveryWeek" : 1,
+//             "DayOfWeek" : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+// ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+//     }
+//         "Monthly" : {
+//         "Day" : 29,
+//         "EveryMonths" : 1
+//     }
+//     }
+// }
+//
+
+
+const createRecurrenceTask = async (data) => {
+
+    const pcId   = data.pc_id;
+    const taskTypeId = data.task_type_id;
+    const taskDescription = data.task_description;
+
+    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
+    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss');
+
+    const recurrenceRule = typeof data.recurrence_pattern === 'string'
+        ? JSON.parse(data.recurrence_pattern)
+        : data.recurrence_pattern;
+    const startDate = DateTime.fromISO(data.start_date);
+    const endDate   = DateTime.fromISO(data.end_date);
+
+
+
+    await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
+
+
+
+    if (!data.start_date) throw new Error('Start date is required');
+    if (!data.end_date)   throw new Error('End date is required');
+
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+    if (!recurrenceRule || typeof recurrenceRule !== 'object') {
+        throw new Error('Recurrence pattern is required and must be a valid JSON object');
+    }
+
+    const executionDates =getRecurrenceTaskDates(recurrenceRule, startDate, endDate);
+
+
     return await prisma.$transaction(async (tx) => {
         const rr = await tx.recurrenceRule.create(
             {
@@ -217,22 +227,6 @@ const createRecurrenceTask = async (data) => {
                         start_date: startDate.toJSDate()
                 }
             })
-        // for (const item of executionDates) {
-        //     await tx.task.create({
-        //         data: {
-        //             pc_id: pcId,
-        //             task_type_id: taskTypeId,
-        //             recurrence_rule_id: rr.recurrence_rule_id,
-        //             task_description: taskDescription,
-        //             execution_date:     DateTime.fromISO(item),
-        //             start_time:         startTime.toJSDate(),
-        //             end_time:           endTime.toJSDate(),
-        //             is_recurring : true,
-        //             is_completed : false
-        //
-        //         }
-        //     });
-        // }
 
         const tasks = [];
         for (const item of executionDates) {
@@ -258,4 +252,186 @@ const createRecurrenceTask = async (data) => {
 }
 
 
-module.exports = { createTask, createRecurrenceTask };
+
+const updateTask = async (data) => {
+    const task_id = data.task_id;
+
+
+    const existing_task = await prisma.task.findFirst({
+        where: { task_id: task_id },
+    });
+
+    if (!existing_task) throw new Error('Task not exist');
+
+    const pcId = existing_task.pc_id;
+    const taskTypeId = data.task_type_id;
+    const taskDescription = data.task_description;
+
+    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
+    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss');
+
+
+    if(existing_task.is_recurring) {
+        const recurrenceRule = typeof data.recurrence_pattern === 'string'
+            ? JSON.parse(data.recurrence_pattern)
+            : data.recurrence_pattern;
+        const startDate = DateTime.fromISO(data.start_date);
+        const endDate   = DateTime.fromISO(data.end_date);
+
+
+        await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
+
+
+
+        if (!data.start_date) throw new Error('Start date is required');
+        if (!data.end_date)   throw new Error('End date is required');
+
+        if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+        if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+        if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+        if (!recurrenceRule || typeof recurrenceRule !== 'object') {
+            throw new Error('Recurrence pattern is required and must be a valid JSON object');
+        }
+
+        const executionDates =getRecurrenceTaskDates(recurrenceRule, startDate, endDate);
+
+
+        return await prisma.$transaction(async (tx) => {
+
+
+            await tx.task.deleteMany({
+                where: {
+                    recurrence_rule_id: existing_task.recurrence_rule_id,
+                    is_completed: false
+                }
+            });
+
+
+            const rr = await tx.recurrenceRule.update(
+                {
+                    where: {
+                        recurrence_rule_id: existing_task.recurrence_rule_id
+                    },
+                    data: {
+                        recurrence_pattern : JSON.stringify(recurrenceRule),
+                        end_date: endDate.toJSDate() ,
+                        start_date: startDate.toJSDate()
+                    }
+                })
+
+            const tasks = [];
+            for (const item of executionDates) {
+                const task = await tx.task.create({
+                    data: {
+                        pc_id:              pcId,
+                        task_type_id:       taskTypeId,
+                        recurrence_rule_id: rr.recurrence_rule_id,
+                        task_description:   taskDescription,
+                        execution_date:     DateTime.fromISO(item).toJSDate(),
+                        start_time:         startTime.toJSDate(),
+                        end_time:           endTime.toJSDate(),
+                        is_recurring:       true,
+                        is_completed:       false,
+                    }
+                });
+                tasks.push(task);
+            }
+
+            return { recurrenceRule: rr, tasks };
+        });
+
+
+
+
+    } else {
+        if (!data.execution_date) throw new Error('Execution date is required');
+        const executionDate = DateTime.fromISO(data.execution_date);
+
+
+        await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
+
+
+        if (!executionDate.isValid) throw new Error('Execution date is not valid. Expected format: YYYY-MM-DD');
+
+
+        const task = await prisma.task.update({
+            where: {
+                task_id : task_id
+            },
+            data: {
+                task_type_id: taskTypeId,
+                recurrence_rule_id: null,
+                task_description: taskDescription,
+                execution_date : executionDate.toJSDate(),
+                start_time :  startTime.toJSDate(),
+                end_time : endTime.toJSDate(),
+                is_recurring : false,
+                is_completed : false
+
+            }
+        });
+
+        return task;
+
+
+    }
+
+
+}
+
+
+
+
+const deleteTask = async (data) => {
+    const task_id = data.task_id;
+
+
+    const existing_task = await prisma.task.findFirst({
+        where: { task_id: task_id },
+    });
+
+    if (!existing_task) throw new Error('Task not exist');
+
+
+    if(existing_task.is_recurring) {
+
+
+        return await prisma.$transaction(async (tx) => {
+
+            const { count } = await tx.task.deleteMany({
+                where: {
+                    recurrence_rule_id: existing_task.recurrence_rule_id,
+                    is_completed: false
+                }
+            });
+
+            await tx.recurrenceRule.deleteMany({
+                where: {
+                    recurrence_rule_id: existing_task.recurrence_rule_id,
+                    Task: {
+                        none: {}
+                    }
+                }
+            });
+
+            return { deletedTasksCount: count };
+        });
+
+
+
+    } else {
+
+        const task = await prisma.task.delete({
+            where: {
+                task_id : task_id
+            }
+        });
+
+        return task;
+
+    }
+}
+
+module.exports = { createTask, createRecurrenceTask,updateTask,deleteTask };
