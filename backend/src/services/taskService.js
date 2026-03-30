@@ -466,6 +466,142 @@ const completeTask = async (data) => {
 // };
 
 
+const getTask = async (data) => {
+    const task_id = parseInt(data.task_id);
+    if (!task_id)      throw new Error('Task ID is required');
 
 
-module.exports = { createTask, createRecurrenceTask, updateTask, deleteTask, completeTask };
+
+    const task = await prisma.task.findUnique({
+        where: {
+            task_id: task_id,
+        },
+        include: {
+            pc:        true,
+            task_type: true,
+        }
+    });
+    return task
+
+}
+
+
+const getTaskByPC = async (data) => {
+    const pc_id = parseInt(data.pc_id);
+
+    if (!pc_id)        throw new Error('Patient-caregiver ID is required');
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc_id: pc_id,
+        },
+        include: {
+            pc:        true,
+            task_type: true,
+        }
+    });
+    return tasks
+
+}
+
+const getTaskByPCDate = async (data) => {
+    const pc_id = data.pc_id;
+    const startDate = DateTime.fromISO(data.start_date);
+    const endDate   = DateTime.fromISO(data.end_date);
+
+
+    if (!pc_id)        throw new Error('Patient-caregiver ID is required');
+
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc_id: pc_id,
+            execution_date: {
+                gte: startDate.toJSDate(),
+                lte: endDate.toJSDate(),
+            },
+        },
+        include: {
+            pc:        true,
+            task_type: true,
+        }
+    });
+    return tasks
+
+}
+
+const getTaskByCaregiver = async (data) => {
+    const caregiver_id = parseInt(data.caregiver_id);
+
+
+    if (!caregiver_id) throw new Error('Caregiver ID is required');
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc: {
+                caregiver_id: caregiver_id
+            },
+        },
+        include: {
+            pc:        true,
+            task_type: true,
+        }
+    });
+    return tasks
+
+}
+
+const getTaskByCaregiverByDate = async (data) => {
+    const caregiver_id = parseInt(data.caregiver_id);
+    const startDate = DateTime.fromISO(data.start_date);
+    const endDate   = DateTime.fromISO(data.end_date);
+
+    if (!caregiver_id) throw new Error('Caregiver ID is required');
+
+
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc: {
+                caregiver_id: caregiver_id
+            },
+            execution_date: {
+                gte: startDate.toJSDate(),
+                lte: endDate.toJSDate(),
+            },
+        },
+            include: {
+                pc:        true,
+                task_type: true,
+            }
+    });
+    return tasks
+
+}
+
+module.exports = { createTask,
+                    createRecurrenceTask,
+                    updateTask,
+                    deleteTask,
+                    completeTask,
+                    getTask,
+                    getTaskByPCDate,
+                    getTaskByPC,
+                    getTaskByCaregiver,
+                    getTaskByCaregiverByDate };

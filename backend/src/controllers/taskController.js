@@ -1,13 +1,23 @@
-const { createTask, createRecurrenceTask , updateTask,deleteTask ,completeTask} = require("../services/taskService.js");
+const { createTask,
+    createRecurrenceTask ,
+    updateTask,
+    deleteTask ,
+    completeTask,
+    getTask,
+    getTaskByPCDate,
+    getTaskByPC,
+    getTaskByCaregiver,
+    getTaskByCaregiverByDate} = require("../services/taskService.js");
 const { successResponse, errorResponse} = require('../models/response');
+const {getAllPatientsForCaregiver} = require("../services/caregiverService");
 
 
 
 async function createTaskEntity(req, res) {
     try {
 
-        const pc = await createTask(req.body)
-        res.status(200).json(successResponse(pc));
+        const t = await createTask(req.body)
+        res.status(200).json(successResponse(t));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'CREATE_ERROR'));
     }
@@ -17,8 +27,8 @@ async function createTaskEntity(req, res) {
 async function createRecurrenceTaskEntity(req, res) {
     try {
 
-        const pc = await createRecurrenceTask(req.body)
-        res.status(200).json(successResponse(pc));
+        const t = await createRecurrenceTask(req.body)
+        res.status(200).json(successResponse(t));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'CREATE_ERROR'));
     }
@@ -30,8 +40,8 @@ async function createRecurrenceTaskEntity(req, res) {
 async function updateTaskEntity(req, res) {
     try {
 
-        const pc = await updateTask(req.body)
-        res.status(200).json(successResponse(pc));
+        const t = await updateTask(req.body)
+        res.status(200).json(successResponse(t));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'UPDATE_ERROR'));
     }
@@ -44,8 +54,8 @@ async function updateTaskEntity(req, res) {
 async function deleteTaskTaskEntity(req, res) {
     try {
 
-        const pc = await deleteTask(req.body)
-        res.status(200).json(successResponse(pc));
+        const t = await deleteTask(req.body)
+        res.status(200).json(successResponse(t));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'DELETE_ERROR'));
     }
@@ -54,15 +64,81 @@ async function deleteTaskTaskEntity(req, res) {
 async function finishTask(req, res) {
     try {
 
-        const pc = await completeTask(req.body)
-        res.status(200).json(successResponse(pc));
+        const t = await completeTask(req.body)
+        res.status(200).json(successResponse(t));
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'COMPLETE_ERROR'));
     }
 
 }
 
+async function getTaskByID(req, res) {
+    try {
+
+        const t = await getTask(req.query)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+
+async function getTaskByPatientCaregiverDate(req, res) {
+    try {
+
+        const t = await getTaskByPCDate(req.body)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+async function getTasksByCaregiverByDate(req, res) {
+    try {
+
+        const t = await getTaskByCaregiverByDate(req.body)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+
+async function getTaskByPatientCaregiver(req, res) {
+    try {
+
+        const t = await getTaskByPC(req.query)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+
+async function getTasksByCaregiver(req, res) {
+    try {
+
+        const t = await getTaskByCaregiver(req.query)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
 
 
 
-module.exports = { createTaskEntity,createRecurrenceTaskEntity,updateTaskEntity,deleteTaskTaskEntity,finishTask};
+module.exports = { createTaskEntity,
+    createRecurrenceTaskEntity,
+    updateTaskEntity,
+    deleteTaskTaskEntity,
+    finishTask,
+    getTaskByID,
+    getTaskByPatientCaregiverDate,
+    getTaskByPatientCaregiver,
+    getTasksByCaregiver,
+    getTasksByCaregiverByDate};
