@@ -114,11 +114,11 @@ model Task {
   task_id             Int              @id @default(autoincrement())
   pc_id               Int
   task_type_id        Int
-  recurrence_rule_id  Int
+  recurrence_rule_id  Int?
 
   pc                  PatientCaregiver @relation(fields: [pc_id], references: [pc_id])
   task_type           TaskType         @relation(fields: [task_type_id], references: [task_type_id])
-  recurrence_rule     RecurrenceRule   @relation(fields: [recurrence_rule_id], references: [recurrence_rule_id])
+  recurrence_rule     RecurrenceRule?   @relation(fields: [recurrence_rule_id], references: [recurrence_rule_id])
 
 
   task_description    String           @db.VarChar(225)
