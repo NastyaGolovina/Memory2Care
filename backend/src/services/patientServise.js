@@ -9,20 +9,53 @@ const deactivatePatient = async (data) => {
         where: { user_id: data.user_id },
     })
 
-    await prisma.PatientCaregiver.updateMany({
-        where: {patient_id: patient.patient_id},
-        data: {
-            active: false
-        }
-    })
+    // await prisma.PatientCaregiver.updateMany({
+    //     where: {patient_id: patient.patient_id},
+    //     data: {
+    //         active: false
+    //     }
+    // })
+    //
+    // const updated = await prisma.patient.update({
+    //     where: { patient_id: patient.patient_id },
+    //     data: {
+    //         active: false
+    //     }
+    // })
+    // return updated;
 
-    const updated = await prisma.patient.update({
-        where: { patient_id: patient.patient_id },
-        data: {
-            active: false
-        }
-    })
-    return updated;
+
+    return await prisma.$transaction(async (tx) => {
+
+        const updated = await tx.patient.update({
+            where: { patient_id: patient.patient_id },
+            data: {
+                active: false
+            }
+        });
+
+        const pcs = await tx.patientCaregiver.findMany({
+            where: { patient_id: patient.patient_id },
+            select: { pc_id: true }
+        });
+
+        await tx.patientCaregiver.updateMany({
+            where: { patient_id: patient.patient_id },
+            data: { active: false }
+        });
+
+        await tx.task.deleteMany({
+            where: {
+                pc_id: {
+                    in: pcs.map(p => p.pc_id)
+                },
+                is_completed : false
+            }
+        });
+
+
+        return updated;
+    });
 }
 
 

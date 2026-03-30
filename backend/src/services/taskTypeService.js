@@ -80,7 +80,15 @@ const deleteTaskType = async (data) => {
 
     if (!existing_task_type) throw new Error('Task type not exist');
 
-// проверка на наличии тасак  в связаной таблице когда напишу эту таблицу
+    const used = await prisma.task.count({
+        where: {
+            task_type_id: taskTypeId
+        }
+    })
+
+    if (used > 0) {
+        throw new Error("Record is used as foreign key")
+    }
 
     const deleteTaskType = await prisma.taskType.delete({
         where: { task_type_id: taskTypeId },

@@ -1,6 +1,7 @@
 const prisma = require("../config/prismaClient.js");
 
 const { DateTime } = require('luxon');
+const {encrypt, generateGUID} = require("./cryptoService");
 
 
 const SupportLevel = {
@@ -38,7 +39,7 @@ const createPatientCaregiver = async (data) => {
     //         patient_id: patientId },
     // });
 
-    const existingCaregiver = await prisma.PatientCaregiver.findFirst({
+    const existingCaregiver = await prisma.patientCaregiver.findFirst({
         where: {
             patient_id: patientId,
             active: true
@@ -64,7 +65,7 @@ const createPatientCaregiver = async (data) => {
     if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
-    const patientCaregiver = await prisma.PatientCaregiver.create({
+    const patientCaregiver = await prisma.patientCaregiver.create({
         data: {
             patient_id: patientId,
             caregiver_id: caregiverId,
@@ -90,7 +91,7 @@ const updatePatientCaregiver = async (data) => {
     const anonName    = data.anon_name;
 
 
-    const patient_caregiver = await prisma.PatientCaregiver.findFirst({
+    const patient_caregiver = await prisma.patientCaregiver.findFirst({
         where: { pc_id: pcId },
     });
 
@@ -104,7 +105,7 @@ const updatePatientCaregiver = async (data) => {
     if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
-    const updatedPatientCaregiver = await prisma.PatientCaregiver.update({
+    const updatedPatientCaregiver = await prisma.patientCaregiver.update({
         where: { pc_id: pcId },
         data: {
             approx_age : approxAge,
@@ -121,7 +122,7 @@ const deletePatientCaregiver = async (data) => {
 
     const pcId   = data.pc_id;
 
-    const patient_caregiver = await prisma.PatientCaregiver.findFirst({
+    const patient_caregiver = await prisma.patientCaregiver.findFirst({
         where: { pc_id: pcId },
     });
 
@@ -130,16 +131,39 @@ const deletePatientCaregiver = async (data) => {
     if (!patient_caregiver) throw new Error('Assignment not found');
     if (!patient_caregiver.active) throw new Error('Assignment is not active');
 
-    // удалить таски
 
-    const updatedPatientCaregiver = await prisma.PatientCaregiver.update({
-        where: { pc_id: pcId },
-        data: {
-            active : false
-        }
+
+    // const updatedPatientCaregiver = await prisma.patientCaregiver.update({
+    //     where: { pc_id: pcId },
+    //     data: {
+    //         active : false
+    //     }
+    // });
+    //
+    // const result = await prisma.task.deleteMany({
+    //     where: {
+    //         pc_id: pcId
+    //     }
+    // })
+
+
+    return await prisma.$transaction(async (tx) => {
+
+        const updatedPatientCaregiver = await tx.patientCaregiver.update({
+            where: { pc_id: pcId },
+            data: { active: false }
+        });
+
+        await tx.task.deleteMany({
+            where: {
+                pc_id: pcId,
+                is_completed : false
+            }
+        });
+
+        return updatedPatientCaregiver
     });
-
-    return updatedPatientCaregiver;
+    // return updatedPatientCaregiver;
 
 }
 
