@@ -160,6 +160,13 @@ const deletePatientCaregiver = async (data) => {
                 is_completed : false
             }
         });
+        await tx.recurrenceRule.deleteMany({
+            where: {
+                Task: {
+                    none: {}
+                }
+            }
+        });
 
         return updatedPatientCaregiver
     });

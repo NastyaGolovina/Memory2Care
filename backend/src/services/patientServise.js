@@ -53,6 +53,14 @@ const deactivatePatient = async (data) => {
             }
         });
 
+        await tx.recurrenceRule.deleteMany({
+            where: {
+                Task: {
+                    none: {}
+                }
+            }
+        });
+
 
         return updated;
     });
