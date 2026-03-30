@@ -1,4 +1,5 @@
 const { verifyAccessToken   } = require('../services/cryptoService');
+const { errorResponse } = require('../models/response');
 
 
 function authenticate(req, res, next) {
@@ -7,7 +8,7 @@ function authenticate(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: 'Token not provided' });
+        return res.status(401).json(errorResponse('Token not provided' , "TOKEN_ERROR"));
     }
 
     try {
@@ -15,7 +16,7 @@ function authenticate(req, res, next) {
         req.user = decoded;
         next();
     } catch (err) {
-        return res.status(403).json({ error: 'The token is invalid or has expired' });
+        return res.status(403).json(errorResponse('The token is invalid or has expired', "TOKEN_ERROR"));
     }
 }
 
