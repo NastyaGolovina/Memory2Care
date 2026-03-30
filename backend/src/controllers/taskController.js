@@ -1,4 +1,4 @@
-const { createTask, createRecurrenceTask , updateTask,deleteTask } = require("../services/taskService.js");
+const { createTask, createRecurrenceTask , updateTask,deleteTask ,completeTask} = require("../services/taskService.js");
 const { successResponse, errorResponse} = require('../models/response');
 
 
@@ -51,8 +51,18 @@ async function deleteTaskTaskEntity(req, res) {
     }
 
 }
+async function finishTask(req, res) {
+    try {
+
+        const pc = await completeTask(req.body)
+        res.status(200).json(successResponse(pc));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'COMPLETE_ERROR'));
+    }
+
+}
 
 
 
 
-module.exports = { createTaskEntity,createRecurrenceTaskEntity,updateTaskEntity,deleteTaskTaskEntity};
+module.exports = { createTaskEntity,createRecurrenceTaskEntity,updateTaskEntity,deleteTaskTaskEntity,finishTask};

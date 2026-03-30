@@ -170,8 +170,7 @@ const createTask = async (data) => {
 //     },
 //         "Weekly" : {
 //         "RecurEveryWeek" : 1,
-//             "DayOfWeek" : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-// ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+//             "DayOfWeek" : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 //     }
 //         "Monthly" : {
 //         "Day" : 29,
@@ -434,4 +433,36 @@ const deleteTask = async (data) => {
     }
 }
 
-module.exports = { createTask, createRecurrenceTask,updateTask,deleteTask };
+// const completeTask = async (data) => {
+//     const task_id = data.task_id;
+//
+//
+//     const existing_task = await prisma.task.findFirst({
+//         where: { task_id: task_id },
+//     });
+//
+//     if (!existing_task) throw new Error('Task not exist');
+//
+//     const task = await prisma.task.update({
+//         where: {
+//             task_id : task_id
+//         },
+//         data: {
+//             is_completed : true
+//         }
+//     });
+//
+//     return task
+//
+// }
+
+const completeTask = async (data) => {
+    const task = await prisma.task.update({
+        where: { task_id: data.task_id },
+        data: { is_completed: true }
+    });
+
+    return task;
+};
+
+module.exports = { createTask, createRecurrenceTask, updateTask, deleteTask, completeTask };
