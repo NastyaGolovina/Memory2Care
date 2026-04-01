@@ -153,19 +153,19 @@ const updatePageArticle = async (data) => {
 const getPageArticle = async (data) => {
 
 
-    const content_id =  parseInt(data.content_id);
+    const element_id = data.element_id;
     const language = data.language;
 
 
 
 
 
-    if (!content_id) throw new Error('content_id is required');
+    if (!element_id) throw new Error('element_id is required');
     if (!language) throw new Error('language is required');
 
     const existingContent = await prisma.siteContent.findFirst({
         where: {
-            content_id: content_id,
+            element_id: element_id,
             language: language
         },
     });
