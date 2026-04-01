@@ -145,8 +145,11 @@ model RecurrenceRule {
 
 enum PageType {
   MAIN_PAGE
-  NEWS
   ABOUT_US
+  TEAM_PARTNERS
+  NEWS
+  CONTACT
+  ACCOUNT
 }
 
 enum Language {
@@ -163,13 +166,13 @@ model Log {
 
 model SiteContent {
   content_id   Int       @id @default(autoincrement())
+  element_id   String    @db.VarChar(225)
   text         String    @db.VarChar(2000)
-  news_author  String    @db.VarChar(225)
-  news_date    DateTime  @db.Date
+  news_author  String?   @db.VarChar(225)
+  news_date    DateTime? @db.Date
   page_type    PageType
-  language     Language
+  language     String    @db.VarChar(225)
 
   @@map("Site_Content")
 }
-
 //npx prisma migrate reset

@@ -7,6 +7,7 @@ const patientCaregiverRouters = require('./routes/patientCaregiverRouters');
 const caregiverRouters = require('./routes/caregiverRouter');
 const taskTypeRouter = require('./routes/taskTypeRouter');
 const taskRouter = require('./routes/taskRouter');
+const pageRouter = require('./routes/pageRouter');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/patient-caregiver', patientCaregiverRouters);
 app.use('/api/caregiver', caregiverRouters);
 app.use('/api/task-type', taskTypeRouter);
 app.use('/api/task', taskRouter);
+app.use('/api/page', pageRouter);
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');

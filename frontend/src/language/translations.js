@@ -6,20 +6,21 @@ export const translations = {
             team_partners: "Team and Partners",
             news: "News",
             contact: "Contact",
-            language : "Language"
+            language : "Language",
+            account : "My Account"
         }
     },
 
-    ru: {
-        nav: {
-            home: "Главная",
-                about: "О нас",
-                team_partners: "Команда и партнёры",
-                news: "Новости",
-                contact: "Контакты"
-                ,language : "Язык"
-        }
-    },
+    // ru: {
+    //     nav: {
+    //         home: "Главная",
+    //             about: "О нас",
+    //             team_partners: "Команда и партнёры",
+    //             news: "Новости",
+    //             contact: "Контакты"
+    //             ,language : "Язык"
+    //     }
+    // },
 
     pt: {
         nav: {
@@ -28,7 +29,8 @@ export const translations = {
                 team_partners: "Equipe e Parceiros",
                 news: "Notícias",
                 contact: "Contato"
-                ,language : "Idioma"
+                ,language : "Idioma",
+                account : "A minha conta"
         }
     }
 
