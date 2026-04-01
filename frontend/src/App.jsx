@@ -3,12 +3,14 @@ import React from 'react';
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LangProvider } from "./language/langContext.jsx";
-import Navbar from "./header.jsx";
+import Navbar from "./components/header.jsx";
 import AboutPage from "./pages/about.jsx";
-import TeamPartners from "./pages/team_partners";
-import News from "./pages/news";
-import Contact from "./pages/contact";
+import TeamPartnersPage from "./pages/team_partners";
+import ContactPage from "./pages/contact";
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import NewsPage from "./pages/news";
+import AccountPage from "./pages/account.jsx"
+import HomePage from "./pages/home"
 const { Header, Content, Footer, Sider } = Layout;
 
 function App() {
@@ -19,11 +21,12 @@ function App() {
                     <Navbar />
                     <Content style={{ padding: "24px" }}>
                         <Routes>
-                            <Route path="/" element={<div>home</div>} />
+                            <Route path="/home" element={<HomePage />} />
                             <Route path="/about" element={<AboutPage />} />
-                            <Route path="/team-partners" element={<TeamPartners />} />
-                            <Route path="/news" element={<News />} />
-                            <Route path="/contact" element={<Contact />} />
+                            <Route path="/team-partners" element={<TeamPartnersPage />} />
+                            <Route path="/news" element={<NewsPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/account" element={<AccountPage />} />
                         </Routes>
                     </Content>
                 </Layout>
