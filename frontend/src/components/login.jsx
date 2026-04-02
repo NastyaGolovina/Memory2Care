@@ -1,19 +1,59 @@
-import {useLocation, useNavigate} from "react-router-dom";
-import React from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import {useLang} from "../language/langContext.jsx";
 
-import { Button, Form, Input} from 'antd';
+import { Button, Form, Input, Alert } from 'antd';
 
 
-const onFinish = (values) => { console.log(values); };
-const onFinishFailed = (errorInfo) => { console.log(errorInfo); };
+
+
+
 export default function Login() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { lang, setLang, t } = useLang();
+    const { t } = useLang();
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
+    const onFinish = async (values) => {
+        setLoading(true);
+        setError(null);
 
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                credentials: 'include', // чтобы refresh token cookie сохранился
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: values.username,
+                    password: values.password
+                })
+            });
 
+            const data = await response.json();
+
+            if (!data.success) {
+                setError(data.error.message);
+                return;
+            }
+
+            localStorage.setItem('accessToken', data.data.accessToken);
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+
+            console.log(data.data.user.role)
+            const role = data.data.user.role;
+            // if (role === 'ADMIN')     navigate('...');
+            // if (role === 'PATIENT')   navigate('...');
+            // if (role === 'CAREGIVER') navigate('...');
+
+        } catch (err) {
+            setError('Server error, please try again');
+        } finally {
+            setLoading(false);
+        }
+    };
+    const onFinishFailed = (errorInfo) => {
+        console.log(errorInfo);
+    };
 
     return (
         <div
@@ -57,6 +97,13 @@ export default function Login() {
                 {/*        Submit*/}
                 {/*    </Button>*/}
                 {/*</Form.Item>*/}
+                {error && (
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Alert message={error} type="error" showIcon />
+                    </Form.Item>
+                )}
+
+
                 <Form.Item
                     label={t("login.username")}
                     name="username"
@@ -74,7 +121,7 @@ export default function Login() {
                 </Form.Item>
 
                 <Form.Item label={null}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                         {t("login.submit")}
                     </Button>
                 </Form.Item>
