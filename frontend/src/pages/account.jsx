@@ -5,6 +5,17 @@ import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/
 import Login from "../components/login";
 import SignUp from "../components/singup.jsx";
 import {useLang} from "../language/langContext.jsx";
+
+
+
+import About from "../components/aboutCaregiver";
+// import Patient from "../components/Patient";
+// import TaskCalendar from "../components/TaskCalendar";
+// import TaskHistory from "../components/TaskHistory";
+// import TaskCreate from "../components/TaskCreate";
+
+
+
 import { Breadcrumb, Layout, theme ,Segmented,
     Button,
     Cascader,
@@ -23,9 +34,12 @@ import { Breadcrumb, Layout, theme ,Segmented,
     Transfer,
     Tree,
     TreeSelect,
-    Upload,} from 'antd';
+    Upload,
+    Menu,
+    Space
+    } from 'antd';
 const { Header, Content, Footer,
-    Sider } = Layout;
+    Sider  } = Layout;
 
 
 
@@ -62,16 +76,86 @@ export default function AccountPage() {
 
     // const [activeTab, setActiveTab] = useState("Log In");
     const [activeTab, setActiveTab] = useState("login");
+    const [selectedKey, setSelectedKey] = useState("about");
+    const items2 = [
+        {
+            key: "about",
+            label: t("caregiver.menu.about"),
+        },
+        {
+            key: "patient",
+            label: t("caregiver.menu.patient"),
+        },
+        {
+            key: "task",
+            label: t("caregiver.menu.task"),
+            children: [
+                {
+                    key: "task_calendar",
+                    label: t("caregiver.menu.calendar"),
+                },
+                {
+                    key: "task_history",
+                    label: t("caregiver.menu.history"),
+                },
+                {
+                    key: "task_create",
+                    label: t("caregiver.menu.create_new"),
+                },
+            ],
+        },
+    ];
+    // const contentMap = {
+    //     about: <About user={user}/>,
+    //     patient: <h2>Patient</h2>,
+    //
+    //     task_calendar: <h2>Calendar</h2>,
+    //     task_history: <h2>History</h2>,
+    //     task_create: <h2>Create new task</h2>,
+    // };
+    //
 
+    const renderContent = () => {
+        switch (selectedKey) {
+            case "about":
+                return <About user={user} />;
+            case "patient":
+                return <h2>Patient</h2>;
+            default:
+                return <div>Not found</div>;
+        }
+    };
     if (user) {
         return (
-            <Layout>
+            // <Layout>
+            <Layout style={{ minHeight: "84vh" }}>
                 <div style={{ padding: '0 48px' }}>
 
 
-                    <Button  onClick={handleLogout}>
-                        {t("account.logout")}
-                    </Button>
+                    {/*<Button style={{ margin: "10px" }} onClick={handleLogout}>*/}
+                    {/*    {t("account.logout")}*/}
+                    {/*</Button>*/}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            margin: "10px 0",
+                        }}
+                    >
+
+                        <Button onClick={handleLogout}>
+                            {t("account.logout")}
+                        </Button>
+
+                        <Space>
+                            <UserOutlined />
+                            <span>{user?.profile?.name}</span>
+                        </Space>
+
+
+
+                    </div>
 
                     <Layout
                         style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
@@ -80,8 +164,9 @@ export default function AccountPage() {
                         <Content style={{ padding: '0 24px' }}>
                             {user.role === "ADMIN" && (
                                 <div>
+
                                     <h2>Admin Panel</h2>
-                                    {/* твой AdminPanel компонент */}
+                                    {/*/!* твой AdminPanel компонент *!/*/}
                                 </div>
                             )}
                             {user.role === "PATIENT" && (
@@ -92,8 +177,32 @@ export default function AccountPage() {
                             )}
                             {user.role === "CAREGIVER" && (
                                 <div>
-                                    <h2>Caregiver Dashboard</h2>
-                                    {/* твой CaregiverDashboard компонент */}
+                                    <Layout
+                                        style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+                                    >
+                                        <Sider style={{ background: colorBgContainer }} width={200}>
+                                            {/*<Menu*/}
+                                            {/*    mode="inline"*/}
+                                            {/*    defaultSelectedKeys={['1']}*/}
+                                            {/*    defaultOpenKeys={['sub1']}*/}
+                                            {/*    style={{ height: '100%' }}*/}
+                                            {/*    items={items2}*/}
+                                            {/*/>*/}
+                                            <Menu
+                                                mode="inline"
+                                                selectedKeys={[selectedKey]}
+                                                onClick={(e) => setSelectedKey(e.key)}
+                                                style={{ height: '100%' }}
+                                                items={items2}
+                                            />
+                                        </Sider>
+                                        {/*<Content style={{ padding: '0 24px', minHeight: 280 }}>*/}
+                                        {/*    {contentMap[selectedKey] || <div>Not found</div>}*/}
+                                        {/*</Content>*/}
+                                        <Content>
+                                            {renderContent()}
+                                        </Content>
+                                    </Layout>
                                 </div>
                             )}
 
