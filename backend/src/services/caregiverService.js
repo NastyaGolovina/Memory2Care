@@ -36,5 +36,43 @@ const getAllPatientsForCaregiver = async (data) => {
 
 
 
+const updateCaregiver = async (data) => {
 
-module.exports = { approveCaregiver, getAllPatientsForCaregiver};
+    const phoneRegex = /^\+?\d{1,4}?[-.\s]?\(?\d{1,4}?\)?([-.\s]?\d{1,9}){1,3}$/;
+    const caregiverId = data.caregiver_id;
+    const name = data.name;
+    const phone = data.phone;
+    const address = data.address;
+
+    const existingCaregiver = await prisma.caregiver.findFirst({
+        where: { caregiver_id: caregiverId },
+    });
+
+    if (!existingCaregiver) throw new Error('Caregiver not exist');
+
+    if (existingCaregiver.approved !== true)
+        throw new Error('Caregiver not approved');
+
+    if (!name || !name.trim()) throw new Error('Name must not be empty');
+    if (name.length > 50) throw new Error('Name max length is 50');
+
+    if (!phone || !phone.trim()) throw new Error('Phone must not be empty');
+    if (phone.length > 255) throw new Error('Phone max length is 255');
+    if (!phoneRegex.test(phone)) throw new Error('Invalid phone format');
+
+    if (!address || !address.trim()) throw new Error('Address must not be empty');
+    if (address.length > 255) throw new Error('Address max length is 255');
+
+    const updatedCaregiver = await prisma.caregiver.update({
+        where: { caregiver_id: caregiverId },
+        data: {
+            name,
+            phone,
+            address,
+        }
+    });
+
+    return updatedCaregiver;
+};
+
+module.exports = { approveCaregiver, getAllPatientsForCaregiver, updateCaregiver};
