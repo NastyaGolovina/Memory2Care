@@ -12,7 +12,8 @@ export async function fetchWithAuth(url, options = {}, onLogout) {
         }
     });
 
-    if (response.status === 401) {
+    // if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
         const refreshRes = await fetch('http://localhost:3000/api/auth/refresh', {
             method: 'POST',
             credentials: 'include'
