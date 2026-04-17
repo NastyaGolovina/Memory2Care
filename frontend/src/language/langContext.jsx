@@ -2,9 +2,8 @@
 import { createContext, useContext, useState } from "react";
 import { translations } from "./translations.js";
 
-const LangContext = createContext(null);
-
-
+// const LangContext = createContext(null);
+export const LangContext = createContext(null);
 
 export function LangProvider({ children }) {
     const [lang, setLang] = useState("en");
@@ -23,10 +22,10 @@ export function LangProvider({ children }) {
 
 // export const useLang = () => useContext(LangContext);
 
-export const useLang = () => {
-    const context = useContext(LangContext);
-    if (!context) {
-        throw new Error("useLang must be used inside LangProvider");
-    }
-    return context;
-};
+// export const useLang = () => {
+//     const context = useContext(LangContext);
+//     if (!context) {
+//         throw new Error("useLang must be used inside LangProvider");
+//     }
+//     return context;
+// };
