@@ -40,14 +40,17 @@ export const translations = {
         },
         account: {
             login: "Log In",
-            signup: "Sign Up"
+            signup: "Sign Up",
+            logout: "Log Out"
         },
         login: {
             username: "Username",
             password: "Password",
             submit: "Submit",
             username_required: "Please input your username!",
-            password_required: "Please input your password!"
+            password_required: "Please input your password!",
+            caregiver_pending: "Your account is awaiting confirmation",
+            patient_inactive: "Your account has been deactivated"
         },
         signup: {
             role: "Role",
@@ -61,7 +64,15 @@ export const translations = {
             phone: "Phone",
             diagnosis: "Diagnosis",
             birth_date: "Birth Date",
-            submit: "Submit"
+            submit: "Submit",
+
+            email_required: "Please input your email!",
+            password_required: "Please input your password!",
+            name_required: "Please input your name!",
+            address_required: "Please input your address!",
+            phone_required: "Please input your phone!",
+            diagnosis_required: "Please input your diagnosis!",
+            birth_date_required: "Please select birth date!"
         }
     },
     pt: {
@@ -76,14 +87,19 @@ export const translations = {
         },
         account: {
             login: "Entrar",
-            signup: "Registrar"
+            signup: "Registrar",
+            logout: "Sair"
         },
         login: {
             username: "Nome de usuário",
             password: "Senha",
             submit: "Enviar",
             username_required: "Por favor, insira seu nome de usuário!",
-            password_required: "Por favor, insira sua senha!"
+            password_required: "Por favor, insira sua senha!",
+            caregiver_pending: "Sua conta está aguardando confirmação.",
+            patient_inactive: "Sua conta foi desativada.",
+
+
         },
         signup: {
             role: "Função",
@@ -97,7 +113,15 @@ export const translations = {
             phone: "Telefone",
             diagnosis: "Diagnóstico",
             birth_date: "Data de nascimento",
-            submit: "Enviar"
+            submit: "Enviar",
+
+            email_required: "Insira o email!",
+            password_required: "Insira a senha!",
+            name_required: "Insira o nome!",
+            address_required: "Insira o endereço!",
+            phone_required: "Insira o telefone!",
+            diagnosis_required: "Insira o diagnóstico!",
+            birth_date_required: "Selecione a data de nascimento!"
         }
     }
 };
