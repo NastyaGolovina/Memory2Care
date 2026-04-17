@@ -81,15 +81,19 @@ export const translations = {
             birth_date_required: "Please select birth date!"
         },
         caregiver: {
-            menu: {
-                about: "About",
-                patient: "Patient",
-                task: "Task",
-                calendar: "Calendar",
-                history: "History",
-                create_new: "Create new"
-            }
+                menu: {
+                    about: "About",
+                    patient: "Patient",
+                    task: "Task",
+                    calendar: "Calendar",
+                    history: "History",
+                    create_new: "Create new"
+                }
+        },
+        patient: {
+                patient_code: "Patient code"
         }
+
     },
     pt: {
         nav: {
@@ -146,15 +150,19 @@ export const translations = {
             birth_date_required: "Selecione a data de nascimento!"
         },
         caregiver: {
-            menu: {
-                about: "Sobre",
-                patient: "Paciente",
-                task: "Tarefa",
-                calendar: "Calendário",
-                history: "Histórico",
-                create_new: "Criar novo"
+                menu: {
+                    about: "Sobre",
+                    patient: "Paciente",
+                    task: "Tarefa",
+                    calendar: "Calendário",
+                    history: "Histórico",
+                    create_new: "Criar novo"
+                }
+
+            },
+        patient: {
+                patient_code: "Сódigo do paciente"
             }
 
-        }
     }
 };
