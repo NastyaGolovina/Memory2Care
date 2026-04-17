@@ -14,7 +14,7 @@ export default function Navbar() {
     const { lang, setLang, t } = useLang();
 
     const navItems = [
-        { key: "/home",             label: t("nav.home")          },
+        { key: "/",             label: t("nav.home")          },
         { key: "/about",        label: t("nav.about")         },
         { key: "/team-partners",label: t("nav.team_partners") },
         { key: "/news",         label: t("nav.news")          },
@@ -35,7 +35,7 @@ export default function Navbar() {
                 src={logo}
                 alt="Logo"
                 style={{ height: 40, marginRight: 20, cursor: "pointer" }}
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("/")}
             />
             <Menu
                 theme="dark"
