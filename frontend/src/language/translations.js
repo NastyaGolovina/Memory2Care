@@ -84,6 +84,7 @@ export const translations = {
                 menu: {
                     about: "About",
                     patient: "Patient",
+                    search: "Search",
                     task: "Task",
                     calendar: "Calendar",
                     history: "History",
@@ -153,6 +154,7 @@ export const translations = {
                 menu: {
                     about: "Sobre",
                     patient: "Paciente",
+                    search: "Procurar",
                     task: "Tarefa",
                     calendar: "Calendário",
                     history: "Histórico",

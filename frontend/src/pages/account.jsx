@@ -9,7 +9,8 @@ import { useLang } from "../language/useLang.js";
 
 
 import About from "../components/aboutCaregiver";
-// import Patient from "../components/Patient";
+import SearchPatient from "../components/patientCaregiverSearch.jsx";
+import PatientCaregiver from "../components/patientCaregiver.jsx";
 // import TaskCalendar from "../components/TaskCalendar";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
@@ -90,6 +91,16 @@ export default function AccountPage() {
         {
             key: "patient",
             label: t("caregiver.menu.patient"),
+            children: [
+                {
+                    key: "patient_caregiver",
+                    label: t("caregiver.menu.patient"),
+                },
+                {
+                    key: "patient_search",
+                    label: t("caregiver.menu.search"),
+                }
+            ]
         },
         {
             key: "task",
@@ -124,8 +135,10 @@ export default function AccountPage() {
         switch (selectedKey) {
             case "about":
                 return <About user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
-            case "patient":
-                return <h2>Patient</h2>;
+            case "patient_caregiver":
+                return <PatientCaregiver user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+            case "patient_search":
+                return <SearchPatient user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             default:
                 return <div>Not found</div>;
         }
