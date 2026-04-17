@@ -75,4 +75,24 @@ const updateCaregiver = async (data) => {
     return updatedCaregiver;
 };
 
-module.exports = { approveCaregiver, getAllPatientsForCaregiver, updateCaregiver};
+
+
+const getCaregiverProfileById = async (data) => {
+    const caregiver_id = Number(data.caregiver_id);
+
+
+    const c = await prisma.caregiver.findFirst({
+        where: { caregiver_id: caregiver_id },
+    });
+
+    if (!c) throw new Error('Caregiver not exist');
+
+    return {
+        caregiver_id: c.caregiver_id,
+        name: c.name,
+        phone: c.phone,
+        address: c.address,
+        approved: c.approved
+    };
+};
+module.exports = { approveCaregiver, getAllPatientsForCaregiver, updateCaregiver,getCaregiverProfileById};
