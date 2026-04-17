@@ -38,6 +38,12 @@ export const translations = {
             language: "Language",
             account: "My Account"
         },
+        common: {
+            edit: "Edit",
+            view: "View",
+            save: "Save",
+            cancel: "Cancel"
+        },
         account: {
             login: "Log In",
             signup: "Sign Up",
@@ -95,6 +101,12 @@ export const translations = {
             language: "Idioma",
             account: "A minha conta"
         },
+        common: {
+            edit: "Editar",
+            view: "Visualizar",
+            save: "Guardar",
+            cancel: "Cancelar"
+        },
         account: {
             login: "Entrar",
             signup: "Registrar",
@@ -142,6 +154,7 @@ export const translations = {
                 history: "Histórico",
                 create_new: "Criar novo"
             }
+
         }
     }
 };

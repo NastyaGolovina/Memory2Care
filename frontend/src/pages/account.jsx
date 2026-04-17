@@ -50,7 +50,11 @@ export default function AccountPage() {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-
+    const handleAutoLogout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        setUser(null);
+    };
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -118,7 +122,7 @@ export default function AccountPage() {
     const renderContent = () => {
         switch (selectedKey) {
             case "about":
-                return <About user={user} />;
+                return <About user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "patient":
                 return <h2>Patient</h2>;
             default:
