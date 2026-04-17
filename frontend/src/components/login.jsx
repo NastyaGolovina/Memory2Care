@@ -8,20 +8,23 @@ import { Button, Form, Input, Alert } from 'antd';
 
 
 
-export default function Login() {
+export default function Login({ setUser }) {
     const navigate = useNavigate();
     const { t } = useLang();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState(null);
+
 
     const onFinish = async (values) => {
         setLoading(true);
         setError(null);
+        setInfo(null);
 
         try {
             const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
-                credentials: 'include', // чтобы refresh token cookie сохранился
+                credentials: 'include',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     email: values.username,
@@ -36,14 +39,44 @@ export default function Login() {
                 return;
             }
 
-            localStorage.setItem('accessToken', data.data.accessToken);
-            localStorage.setItem('user', JSON.stringify(data.data.user));
+            //
+            // if (role === 'CAREGIVER' && !profile.approved) {
+            //     setInfo(t("login.caregiver_pending")); // "Please wait for confirmation"
+            //     return;
+            // }
+            //
+            // if (role === 'PATIENT' && !profile.active) {
+            //     setError(t("login.patient_inactive")); // "Your account is deactivated"
+            //     return;
+            // }
+            //
+            //
+            //
+            // localStorage.setItem('accessToken', data.data.accessToken);
+            // localStorage.setItem('user', JSON.stringify(data.data.user));
+            //
+            // setUser(data.data.user);
 
-            console.log(data.data.user.role)
-            const role = data.data.user.role;
-            // if (role === 'ADMIN')     navigate('...');
-            // if (role === 'PATIENT')   navigate('...');
-            // if (role === 'CAREGIVER') navigate('...');
+
+            const { user, accessToken } = data.data;
+            const { role, profile } = user;
+
+            if (role === 'CAREGIVER' && !profile.approved) {
+                setInfo(t("login.caregiver_pending"));
+                return;
+            }
+
+            if (role === 'PATIENT' && !profile.active) {
+                setError(t("login.patient_inactive"));
+                return;
+            }
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('user', JSON.stringify(user));
+            setUser(user);
+
+            console.log(data.data.user)
+            // const role = data.data.user.role;
 
         } catch (err) {
             setError('Server error, please try again');
@@ -55,6 +88,8 @@ export default function Login() {
         console.log(errorInfo);
     };
 
+
+
     return (
         <div
             style={{
@@ -63,7 +98,12 @@ export default function Login() {
                 alignItems: "center",
                 height: "50vh"
             }}
+
+
         >
+
+
+
             <Form
                 name="basic"
                 labelCol={{ span: 8 }}
@@ -74,32 +114,15 @@ export default function Login() {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >
-                {/*<Form.Item*/}
-                {/*    label="Username"*/}
-                {/*    name="username"*/}
-                {/*    rules={[{ required: true, message: 'Please input your username!' }]}*/}
-                {/*>*/}
-                {/*    <Input />*/}
-                {/*</Form.Item>*/}
 
-                {/*<Form.Item*/}
-                {/*    label="Password"*/}
-                {/*    name="password"*/}
-                {/*    rules={[{ required: true, message: 'Please input your password!' }]}*/}
-                {/*>*/}
-                {/*    <Input.Password />*/}
-                {/*</Form.Item>*/}
-
-
-
-                {/*<Form.Item label={null}>*/}
-                {/*    <Button type="primary" htmlType="submit">*/}
-                {/*        Submit*/}
-                {/*    </Button>*/}
-                {/*</Form.Item>*/}
                 {error && (
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Alert message={error} type="error" showIcon />
+                    </Form.Item>
+                )}
+                {info && (
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Alert message={info} type="warning" showIcon />
                     </Form.Item>
                 )}
 

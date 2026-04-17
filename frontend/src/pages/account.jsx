@@ -31,57 +31,115 @@ const { Header, Content, Footer,
 
 
 export default function AccountPage() {
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem("user");
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const { lang, setLang, t } = useLang();
 
 
-    const [activeTab, setActiveTab] = useState("Log In");
+
+    const handleLogout = async () => {
+        try {
+            await fetch('http://localhost:3000/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            });
+        } catch (err) {
+            console.error('Logout error:', err);
+        } finally {
+            // Чистим localStorage в любом случае
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('user');
+            setUser(null);
+        }
+    };
+
+    // const [activeTab, setActiveTab] = useState("Log In");
+    const [activeTab, setActiveTab] = useState("login");
+
+    if (user) {
+        return (
+            <Layout>
+                <div style={{ padding: '0 48px' }}>
 
 
+                    <Button  onClick={handleLogout}>
+                        {t("account.logout")}
+                    </Button>
+
+                    <Layout
+                        style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+                    >
+
+                        <Content style={{ padding: '0 24px' }}>
+                            {user.role === "ADMIN" && (
+                                <div>
+                                    <h2>Admin Panel</h2>
+                                    {/* твой AdminPanel компонент */}
+                                </div>
+                            )}
+                            {user.role === "PATIENT" && (
+                                <div>
+                                    <h2>Patient Dashboard</h2>
+                                    {/* твой PatientDashboard компонент */}
+                                </div>
+                            )}
+                            {user.role === "CAREGIVER" && (
+                                <div>
+                                    <h2>Caregiver Dashboard</h2>
+                                    {/* твой CaregiverDashboard компонент */}
+                                </div>
+                            )}
+
+                        </Content>
+                    </Layout>
+                </div>
+                <Footer style={{ textAlign: 'center' }}>
+                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                </Footer>
+            </Layout>
+        );
+    }
 
 
     return (
         <Layout>
             <div style={{ padding: '0 48px' }}>
-                {/*<Breadcrumb*/}
 
-                {/*    items={[{ title: 'Home' }, { title: 'List' }, { title: 'App' }]}*/}
-                {/*/>*/}
-
-                {/*<Segmented style={{ margin: '16px 0' }} options={["Log In", "Sign Up"]} />*/}
 
                 {/*<Segmented*/}
                 {/*    style={{ margin: '16px 0' }}*/}
-                {/*    options={["Log In", "Sign Up"]}*/}
+                {/*    options={[t("account.login"), t("account.signup")]}*/}
                 {/*    value={activeTab}*/}
                 {/*    onChange={(value) => setActiveTab(value)}*/}
                 {/*/>*/}
 
                 <Segmented
                     style={{ margin: '16px 0' }}
-                    options={[t("account.login"), t("account.signup")]}
+                    options={[
+                        { label: t("account.login"), value: "login" },
+                        { label: t("account.signup"), value: "signup" }
+                    ]}
                     value={activeTab}
-                    onChange={(value) => setActiveTab(value)}
+                    onChange={setActiveTab}
                 />
-
 
                 <Layout
                     style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
                 >
-                    {/*<Content style={{ padding: '0 24px', minHeight: 280 }}>*/}
 
-
-
-
-
-                    {/*</Content>*/}
-                    {/*<Content style={{ padding: '0 24px', minHeight: 280 }}>*/}
-                    {/*    {activeTab === "Log In" ? <Login /> : <SignUp />}*/}
-                    {/*</Content>*/}
                     <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                        {activeTab === t("account.login") ? <Login /> : <SignUp />}
+                        {/*{activeTab === t("account.login") ? <Login /> : <SignUp />}*/}
+                        {/*{activeTab === t("account.login") ? <Login setUser={setUser} /> : <SignUp />}*/}
+                        {activeTab === "login"
+                            ? <Login setUser={setUser} />
+                            : <SignUp setUser={setUser} />}
                     </Content>
                 </Layout>
             </div>
