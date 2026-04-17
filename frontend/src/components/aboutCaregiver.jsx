@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useLang } from "../language/langContext";
+import { useLang } from "../language/useLang.js";
 import { Alert, Button, Form, Input, Typography } from 'antd';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 
@@ -56,7 +56,7 @@ export default function AboutCaregiver({ user, setUser,handleAutoLogout  }) {
                 handleAutoLogout
             );
 
-            // if (!updateRes) return;
+            if (!updateRes) return;
             const updateData = await updateRes.json();
             // console.log('updateData:', updateData);
 
@@ -184,15 +184,30 @@ export default function AboutCaregiver({ user, setUser,handleAutoLogout  }) {
                     <Input readOnly />
                 </Form.Item>
 
-                <Form.Item label={t("signup.name")} name="name">
+                {/*<Form.Item label={t("signup.name")} name="name">*/}
+                {/*    <Input readOnly={!isEdit} />*/}
+                {/*</Form.Item>*/}
+
+                {/*<Form.Item label={t("signup.address")} name="address">*/}
+                {/*    <Input readOnly={!isEdit} />*/}
+                {/*</Form.Item>*/}
+
+                {/*<Form.Item label={t("signup.phone")} name="phone">*/}
+                {/*    <Input readOnly={!isEdit} />*/}
+                {/*</Form.Item>*/}
+
+                <Form.Item label={t("signup.name")} name="name"
+                           rules={isEdit ? [{ required: true, message: t("signup.name_required") }] : []}>
                     <Input readOnly={!isEdit} />
                 </Form.Item>
 
-                <Form.Item label={t("signup.address")} name="address">
+                <Form.Item label={t("signup.address")} name="address"
+                           rules={isEdit ? [{ required: true, message: t("signup.address_required") }] : []}>
                     <Input readOnly={!isEdit} />
                 </Form.Item>
 
-                <Form.Item label={t("signup.phone")} name="phone">
+                <Form.Item label={t("signup.phone")} name="phone"
+                           rules={isEdit ? [{ required: true, message: t("signup.phone_required") }] : []}>
                     <Input readOnly={!isEdit} />
                 </Form.Item>
 

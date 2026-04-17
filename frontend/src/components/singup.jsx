@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useLang} from "../language/langContext.jsx";
+import { useLang } from "../language/useLang.js";
 
 import { Button, DatePicker, Form, Input, Radio, Alert } from 'antd';
 

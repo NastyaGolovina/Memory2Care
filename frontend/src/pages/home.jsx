@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout, theme,Divider ,Typography , Alert, Flex, Spin} from 'antd';
 
 import { useEffect, useState } from "react";
-import { useLang } from "../language/langContext.jsx";
+import { useLang } from "../language/useLang.js";
 import logo from "../assets/logo-v2.png";
 const {  Content, Footer } = Layout;
 const { Title } = Typography;

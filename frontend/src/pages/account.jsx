@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import Login from "../components/login";
 import SignUp from "../components/singup.jsx";
-import {useLang} from "../language/langContext.jsx";
+import { useLang } from "../language/useLang.js";
 
 
 
@@ -13,6 +13,7 @@ import About from "../components/aboutCaregiver";
 // import TaskCalendar from "../components/TaskCalendar";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
+import PatientPage from "../components/PatientPage.jsx";
 
 
 
@@ -173,11 +174,19 @@ export default function AccountPage() {
                                     {/*/!* твой AdminPanel компонент *!/*/}
                                 </div>
                             )}
-                            {user.role === "PATIENT" && (
-                                <div>
-                                    <h2>Patient Dashboard</h2>
-                                    {/* твой PatientDashboard компонент */}
-                                </div>
+                            {/*{user.role === "PATIENT" && (*/}
+                            {/*    <PatientPage*/}
+                            {/*        user={user}*/}
+                            {/*        setUser={setUser}*/}
+                            {/*        handleAutoLogout={handleAutoLogout}*/}
+                            {/*    />*/}
+                            {/*)}*/}
+                            {user?.role === "PATIENT" && (
+                                <PatientPage
+                                    user={user}
+                                    setUser={setUser}
+                                    handleAutoLogout={handleAutoLogout}
+                                />
                             )}
                             {user.role === "CAREGIVER" && (
                                 <div>

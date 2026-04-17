@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import {useLang} from "../language/langContext.jsx";
+import { useLang } from "../language/useLang.js";
 
 import { Button, Form, Input, Alert } from 'antd';
 
