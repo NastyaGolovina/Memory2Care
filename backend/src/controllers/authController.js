@@ -10,7 +10,12 @@ async function signup(req, res) {
         const user = await createUser(req.body)
         if(user.role === 'CAREGIVER') {
             return res.status(201).json(successResponse({
-                message: 'Account created, please wait for confirmation'
+                message: 'Account created, please wait for confirmation',
+                user : {
+                    user_id: user.user_id,
+                    email:   user.email,
+                    role:    user.role
+                }
             }));
         }
         const accessToken  = generateAccessToken(user.user_id, user.role);
@@ -23,12 +28,13 @@ async function signup(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        res.status(201).json(successResponse({ accessToken,
-        user : {
-            user_id: user.user_id,
-            email:   user.email,
-            role:    user.role
-        }}));
+        // res.status(201).json(successResponse({ accessToken,
+        // user : {
+        //     user_id: user.user_id,
+        //     email:   user.email,
+        //     role:    user.role
+        // }}));
+        res.status(201).json(successResponse({ accessToken, user }));
 
     } catch (err) {
         res.status(400).json(errorResponse(err.message, 'SIGNUP_ERROR'));

@@ -46,7 +46,7 @@ const createUser = async (data) => {
         return await prisma.$transaction(async (tx) => {
             const user = await createUserEntity(tx, email, password, role);
 
-            await tx.patient.create({
+            const patient = await tx.patient.create({
                 data: {
                     user_id:      user.user_id,
                     address:      encrypt(data.address),
@@ -59,7 +59,22 @@ const createUser = async (data) => {
                 }
             });
 
-            return user;
+            // return user;
+            return {
+                user_id: user.user_id,
+                email: user.email,
+                role: user.role,
+                profile: {
+                    patient_id: patient.patient_id,
+                    name: decrypt(patient.name),
+                    phone: decrypt(patient.phone),
+                    address: decrypt(patient.address),
+                    diagnosis: decrypt(patient.diagnosis),
+                    birth_date: decrypt(patient.birth_date),
+                    patient_code: patient.patient_code,
+                    active: patient.active
+                }
+            };
         });
 
         // const user = await createUserEntity(data.email, data.password, role);
