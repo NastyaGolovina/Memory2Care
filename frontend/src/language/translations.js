@@ -89,7 +89,32 @@ export const translations = {
                     calendar: "Calendar",
                     history: "History",
                     create_new: "Create new"
-                }
+                },
+            select: {
+                family_member: "Family Member",
+                informal_caretaker: "Informal Caretaker",
+                medical_caretaker: "Medical Caretaker",
+                low: "Low",
+                medium: "Medium",
+                high: "High"
+            },
+            form: {
+                patient_id: "Patient ID",
+                anon_name: "Name",
+                relationship: "Relationship",
+                support_level: "Support Level",
+                approx_age: "Approximate Age",
+                anon_name_required: "Name is required",
+                relationship_required: "Relationship is required",
+                support_level_required: "Support level is required",
+                approx_age_required: "Approximate age is required",
+                add_patient: "Add Patient",
+                cancel: "Cancel"
+            },
+            messages: {
+                patient_added: "Patient successfully added",
+            }
+
         },
         patient: {
                 patient_code: "Patient code"
@@ -151,17 +176,41 @@ export const translations = {
             birth_date_required: "Selecione a data de nascimento!"
         },
         caregiver: {
-                menu: {
-                    about: "Sobre",
-                    patient: "Paciente",
-                    search: "Procurar",
-                    task: "Tarefa",
-                    calendar: "Calendário",
-                    history: "Histórico",
-                    create_new: "Criar novo"
-                }
-
+            menu: {
+                about: "Sobre",
+                patient: "Paciente",
+                search: "Pesquisar",
+                task: "Tarefa",
+                calendar: "Calendário",
+                history: "Histórico",
+                create_new: "Criar novo"
             },
+            select: {
+                family_member: "Familiar",
+                informal_caretaker: "Cuidador Informal",
+                medical_caretaker: "Cuidador Médico",
+                low: "Baixo",
+                medium: "Médio",
+                high: "Alto"
+            },
+            form: {
+                patient_id: "ID do Paciente",
+                anon_name: "Nome",
+                relationship: "Relacionamento",
+                support_level: "Nível de Suporte",
+                approx_age: "Idade Aproximada",
+                anon_name_required: "Nome é obrigatório",
+                relationship_required: "Relacionamento é obrigatório",
+                support_level_required: "Nível de suporte é obrigatório",
+                approx_age_required: "Idade aproximada é obrigatória",
+                add_patient: "Adicionar Paciente",
+                cancel: "Cancelar"
+            },
+            messages: {
+                patient_added: "Paciente adicionado com sucesso",
+            }
+
+        },
         patient: {
                 patient_code: "Сódigo do paciente"
             }
