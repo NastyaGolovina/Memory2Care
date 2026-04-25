@@ -102,7 +102,16 @@ const deleteTaskType = async (data) => {
 
 
 
+const getAllTaskTypes = async () => {
+    const taskTypes = await prisma.taskType.findMany({
+        select: {
+            task_type_id: true,
+            task_type_name: true,
+        },
+    });
+
+    return taskTypes;
+};
 
 
-
-module.exports = { createTaskType,updateTaskType,deleteTaskType };
+module.exports = { createTaskType,updateTaskType,deleteTaskType,getAllTaskTypes };

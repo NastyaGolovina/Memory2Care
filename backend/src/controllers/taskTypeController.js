@@ -1,4 +1,4 @@
-const  { createTaskType,updateTaskType,deleteTaskType }  = require("../services/taskTypeService.js");
+const  { createTaskType,updateTaskType,deleteTaskType,getAllTaskTypes }  = require("../services/taskTypeService.js");
 const { successResponse, errorResponse } = require('../models/response');
 
 
@@ -36,4 +36,16 @@ async function deleteTaskTypeEntity(req, res) {
 
 }
 
-module.exports = { createTaskTypeEntity,updateTaskTypeEntity,deleteTaskTypeEntity };
+
+async function getAllTaskTypesEntity(req, res) {
+    try {
+
+        const p = await getAllTaskTypes(req.query)
+        res.status(200).json(successResponse(p));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+module.exports = { createTaskTypeEntity,updateTaskTypeEntity,deleteTaskTypeEntity,getAllTaskTypesEntity };
