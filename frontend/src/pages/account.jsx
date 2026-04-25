@@ -14,7 +14,7 @@ import PatientCaregiver from "../components/patientCaregiver.jsx";
 // import TaskCalendar from "../components/TaskCalendar";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
-import PatientPage from "../components/PatientPage.jsx";
+import TaskCreate from "../components/createTask.jsx";
 
 
 
@@ -139,6 +139,8 @@ export default function AccountPage() {
                 return <PatientCaregiver user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "patient_search":
                 return <SearchPatient user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+            case "task_create":
+                return <TaskCreate user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             default:
                 return <div>Not found</div>;
         }
