@@ -129,7 +129,45 @@ export const translations = {
         },
         patient: {
                 patient_code: "Patient code"
-        }
+        },
+        task: {
+            type:                    "Task Type",
+            normal:                  "Normal",
+            recurrent:               "Recurrent",
+            select_patient:          "Select patient",
+            task_type:               "Task Type",
+            select_task_type:        "Select task type",
+            description:             "Description",
+            execution_date:          "Execution Date",
+            time_range:              "Time",
+            start_date:              "Start Date",
+            end_date:                "End Date",
+            recurrence_type:         "Recurrence",
+            every_days:              "Every (days)",
+            every_weekday:           "Every weekday",
+            recur_every_week:        "Every (weeks)",
+            day_of_week:             "Days of week",
+            day_of_month:            "Day of month",
+            every_months:            "Every (months)",
+            sunday: "Sunday", monday: "Monday", tuesday: "Tuesday",
+            wednesday: "Wednesday", thursday: "Thursday",
+            friday: "Friday", saturday: "Saturday",
+            // required messages
+            pc_id_required:           "Please select a patient",
+            task_type_required:       "Please select a task type",
+            description_required:     "Please enter a description",
+            execution_date_required:  "Please select an execution date",
+            time_range_required:      "Please select a time range",
+            start_date_required:      "Please select a start date",
+            end_date_required:        "Please select an end date",
+            every_days_required:      "Please enter interval in days",
+            recur_every_week_required:"Please enter interval in weeks",
+            day_of_week_required:     "Please select at least one day",
+            day_of_month_required:    "Please enter day of month",
+            every_months_required:    "Please enter interval in months",
+            created: "Task created successfully"
+        },
+
 
     },
     pt: {
@@ -235,7 +273,43 @@ export const translations = {
         },
         patient: {
                 patient_code: "Сódigo do paciente"
-            }
+            },
+        task: {
+            type:                    "Tipo de Tarefa",
+            normal:                  "Normal",
+            recurrent:               "Recorrente",
+            select_patient:          "Selecionar paciente",
+            task_type:               "Tipo de Tarefa",
+            select_task_type:        "Selecionar tipo de tarefa",
+            description:             "Descrição",
+            execution_date:          "Data de Execução",
+            time_range:              "Horário",
+            start_date:              "Data de Início",
+            end_date:                "Data de Fim",
+            recurrence_type:         "Recorrência",
+            every_days:              "A cada (dias)",
+            every_weekday:           "Todos os dias úteis",
+            recur_every_week:        "A cada (semanas)",
+            day_of_week:             "Dias da semana",
+            day_of_month:            "Dia do mês",
+            every_months:            "A cada (meses)",
+            sunday: "Domingo", monday: "Segunda", tuesday: "Terça",
+            wednesday: "Quarta", thursday: "Quinta",
+            friday: "Sexta", saturday: "Sábado",
+            pc_id_required:           "Selecione um paciente",
+            task_type_required:       "Selecione um tipo de tarefa",
+            description_required:     "Insira uma descrição",
+            execution_date_required:  "Selecione a data de execução",
+            time_range_required:      "Selecione o intervalo de tempo",
+            start_date_required:      "Selecione a data de início",
+            end_date_required:        "Selecione a data de fim",
+            every_days_required:      "Insira o intervalo em dias",
+            recur_every_week_required:"Insira o intervalo em semanas",
+            day_of_week_required:     "Selecione pelo menos um dia",
+            day_of_month_required:    "Insira o dia do mês",
+            every_months_required:    "Insira o intervalo em meses",
+            created: "Tarefa criada com sucesso"
+        },
 
     }
 };
