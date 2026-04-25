@@ -109,12 +109,23 @@ export const translations = {
                 support_level_required: "Support level is required",
                 approx_age_required: "Approximate age is required",
                 add_patient: "Add Patient",
-                cancel: "Cancel"
+                cancel: "Cancel",
+                patient_code:     "Patient Code",
+                assignment_date:  "Assignment Date",
+                pc_id:            "Record ID",
+
             },
             messages: {
                 patient_added: "Patient successfully added",
-            }
-
+            },
+            deactivate:       "Deactivate",
+            deactivate_title: "Deactivate patient",
+            deactivate_desc:  "Are you sure you want to deactivate this patient?",
+            deactivate_ok:    "Yes",
+            deactivate_cancel:"No",
+            deactivated:      "Patient deactivated",
+            updated:          "Patient updated successfully",
+            select_patient:   "Seleсt a patient from the list"
         },
         patient: {
                 patient_code: "Patient code"
@@ -204,11 +215,22 @@ export const translations = {
                 support_level_required: "Nível de suporte é obrigatório",
                 approx_age_required: "Idade aproximada é obrigatória",
                 add_patient: "Adicionar Paciente",
-                cancel: "Cancelar"
+                cancel: "Cancelar",
+                patient_code:     "Código do Paciente",
+                assignment_date:  "Data de Atribuição",
+                pc_id:            "ID do Registo",
             },
             messages: {
                 patient_added: "Paciente adicionado com sucesso",
-            }
+            },
+            deactivate:       "Desativar",
+            deactivate_title: "Desativar paciente",
+            deactivate_desc:  "Tem certeza que deseja desativar este paciente?",
+            deactivate_ok:    "Sim",
+            deactivate_cancel:"Não",
+            deactivated:      "Paciente desativado",
+            updated:          "Paciente atualizado com sucesso",
+            select_patient:   "Selecione um paciente da lista",
 
         },
         patient: {
