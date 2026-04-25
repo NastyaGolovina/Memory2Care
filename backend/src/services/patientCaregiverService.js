@@ -176,8 +176,40 @@ const deletePatientCaregiver = async (data) => {
 
 
 
+const getPatientCaregiverById = async (data) => {
+    const pc_id = Number(data.pc_id);
+
+    if (!pc_id) throw new Error('Invalid pc_id');
+
+    const pc = await prisma.patientCaregiver.findFirst({
+        where: { pc_id: pc_id,
+                active: true
+        },
+        include: {
+            patient: {
+                select: {
+                    patient_code: true
+                }
+            }
+        }
+    });
+
+    if (!pc) throw new Error('Record not found');
+
+    return {
+        pc_id: pc.pc_id,
+        patient_id: pc.patient_id,
+        caregiver_id: pc.caregiver_id,
+        relationship: pc.relationship,
+        support_level: pc.support_level,
+        approx_age: pc.approx_age,
+        anon_name: pc.anon_name,
+        active: pc.active,
+        assignment_date: pc.assignment_date,
+        patient_code: pc.patient.patient_code
+    };
+};
 
 
 
-
-module.exports = { createPatientCaregiver,updatePatientCaregiver,deletePatientCaregiver };
+module.exports = { createPatientCaregiver,updatePatientCaregiver,deletePatientCaregiver,getPatientCaregiverById };

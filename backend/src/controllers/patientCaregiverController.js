@@ -1,4 +1,4 @@
-const { createPatientCaregiver,updatePatientCaregiver, deletePatientCaregiver} = require("../services/patientCaregiverService.js");
+const { createPatientCaregiver,updatePatientCaregiver, deletePatientCaregiver,getPatientCaregiverById} = require("../services/patientCaregiverService.js");
 const { successResponse, errorResponse } = require('../models/response');
 
 
@@ -36,4 +36,17 @@ async function deactivatePatientCaregiverEntity(req, res) {
 
 }
 
-module.exports = { createPatientCaregiverEntity,updatePatientCaregiverEntity,deactivatePatientCaregiverEntity };
+
+
+async function getPatientProfileByPatientCaregiverId(req, res) {
+    try {
+
+        const p = await getPatientCaregiverById(req.query)
+        res.status(200).json(successResponse(p));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+
+module.exports = { createPatientCaregiverEntity,updatePatientCaregiverEntity,deactivatePatientCaregiverEntity ,getPatientProfileByPatientCaregiverId};
