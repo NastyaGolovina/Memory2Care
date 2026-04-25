@@ -27,6 +27,10 @@ const getAllPatientsForCaregiver = async (data) => {
         where: {
             caregiver_id: caregiver_id,
             active: true
+        },
+        select: {
+            pc_id: true,
+            anon_name: true
         }
     });
 
