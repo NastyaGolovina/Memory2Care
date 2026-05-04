@@ -111,10 +111,10 @@ export default function AccountPage() {
                     key: "task_calendar",
                     label: t("caregiver.menu.calendar"),
                 },
-                {
-                    key: "task_history",
-                    label: t("caregiver.menu.history"),
-                },
+                // {
+                //     key: "task_history",
+                //     label: t("caregiver.menu.history"),
+                // },
                 {
                     key: "task_create",
                     label: t("caregiver.menu.create_new"),
