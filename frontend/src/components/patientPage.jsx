@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useLang } from "../language/useLang.js";
-import {Alert, Button, DatePicker, Form, Input, Typography} from 'antd';
+import { Alert, Button, DatePicker, Form, Input, Typography, Popconfirm } from 'antd';
 import { fetchWithAuth } from '../utils/fetchWithAuth';
 import dayjs from 'dayjs';
 
@@ -12,6 +12,7 @@ export default function PatientPage({ user, setUser, handleAutoLogout }) {
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     React.useEffect(() => {
         if (user) {
@@ -43,7 +44,25 @@ export default function PatientPage({ user, setUser, handleAutoLogout }) {
         }
     };
 
+    const handleDeactivate = async () => {
+        try {
+            const res = await fetchWithAuth("http://localhost:3000/api/patient/deactivate", {
+                method: "POST",
+                body: JSON.stringify({ user_id: user.id }),
+            }, handleAutoLogout);
 
+            if (!res) return;
+            const data = await res.json();
+
+            if (!data.success) {
+                setError(data.error?.message || "Deactivation failed");
+            } else {
+                handleAutoLogout();
+            }
+        } catch {
+            setError("Server error, please try again");
+        }
+    };
 
     const handleFinish = async (values) => {
         setLoading(true);
@@ -111,9 +130,26 @@ export default function PatientPage({ user, setUser, handleAutoLogout }) {
                     {t("caregiver.menu.about")}
                 </Typography.Title>
 
-                <Button type="dashed" size="middle" onClick={toggleEdit}>
-                    {isEdit ? t("common.cancel") : t("common.edit")}
-                </Button>
+                <div style={{ display: "flex", gap: 8 }}>
+                    <Button type="dashed" size="middle" onClick={toggleEdit}>
+                        {isEdit ? t("common.cancel") : t("common.edit")}
+                    </Button>
+
+
+                    {!isEdit && (
+                        <Popconfirm
+                            title={t("caregiver.deactivate_title")}
+                            description={t("caregiver.deactivate_desc")}
+                            onConfirm={handleDeactivate}
+                            okText={t("caregiver.deactivate_ok")}
+                            cancelText={t("caregiver.deactivate_cancel")}
+                        >
+                            <Button danger size="middle">
+                                {t("caregiver.deactivate")}
+                            </Button>
+                        </Popconfirm>
+                    )}
+                </div>
             </div>
 
             <Form
@@ -126,9 +162,12 @@ export default function PatientPage({ user, setUser, handleAutoLogout }) {
             >
 
                 {error && (
-                    <Form.Item wrapperCol={{ offset: 2, span: 14 }}>
-                        <Alert message={error} type="error" showIcon />
-                    </Form.Item>
+                    <Alert message={error} type="error" showIcon closable
+                           onClose={() => setError(null)} style={{ marginBottom: 16 }} />
+                )}
+                {success && (
+                    <Alert message={success} type="success" showIcon closable
+                           onClose={() => setSuccess(null)} style={{ marginBottom: 16 }} />
                 )}
 
                 <Form.Item label={t("signup.email")} name="email">
