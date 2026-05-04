@@ -477,8 +477,14 @@ const getTask = async (data) => {
             task_id: task_id,
         },
         include: {
-            pc:        true,
-            task_type: true,
+
+            pc: {
+                select: {
+                    pc_id: true,
+                    anon_name: true,
+                }
+            },
+            recurrence_rule: true,
         }
     });
     return task
