@@ -584,7 +584,11 @@ const getTaskByCaregiverByDate = async (data) => {
             execution_date: {
                 gte: startDate.toJSDate(),
                 lte: endDate.toJSDate(),
-            },
+            }
+            // execution_date: {
+            //     gte: startDate.toJSDate(),
+            //     lte: endDate.toJSDate(),
+            // },
         },
             include: {
                 pc:        true,
