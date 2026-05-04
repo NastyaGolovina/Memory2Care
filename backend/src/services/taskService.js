@@ -564,8 +564,8 @@ const getTaskByCaregiver = async (data) => {
 
 const getTaskByCaregiverByDate = async (data) => {
     const caregiver_id = parseInt(data.caregiver_id);
-    const startDate = DateTime.fromISO(data.start_date);
-    const endDate   = DateTime.fromISO(data.end_date);
+    const startDate = DateTime.fromISO(data.start_date, { zone: 'utc' });
+    const endDate   = DateTime.fromISO(data.end_date,   { zone: 'utc' });
 
     if (!caregiver_id) throw new Error('Caregiver ID is required');
 
