@@ -508,8 +508,9 @@ const getTaskByPC = async (data) => {
 
 const getTaskByPCDate = async (data) => {
     const pc_id = data.pc_id;
-    const startDate = DateTime.fromISO(data.start_date);
-    const endDate   = DateTime.fromISO(data.end_date);
+
+    const startDate     = DateTime.fromISO(data.start_date,     { zone: 'utc' });
+    const endDate       = DateTime.fromISO(data.end_date,       { zone: 'utc' });
 
 
     if (!pc_id)        throw new Error('Patient-caregiver ID is required');
