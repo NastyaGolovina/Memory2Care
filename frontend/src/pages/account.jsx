@@ -10,8 +10,9 @@ import { useLang } from "../language/useLang.js";
 
 import About from "../components/aboutCaregiver";
 import SearchPatient from "../components/patientCaregiverSearch.jsx";
+import PatientPage from "../components/patientPage.jsx";
 import PatientCaregiver from "../components/patientCaregiver.jsx";
-import TaskCalendar from "../components/TaskCalendar";
+import TaskCalendar from "../components/taskCalendar.jsx";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
 import TaskCreate from "../components/createTask.jsx";
