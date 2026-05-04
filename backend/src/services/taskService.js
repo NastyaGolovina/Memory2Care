@@ -78,10 +78,10 @@ function getRecurrenceTaskDates(recurrenceRule, startDate, endDate) {
         while (weekStart <= endDate) {
 
             for (let i = 0; i < 7; i++) {
-                const current = weekStart.plus({ days: i });
+                const current = weekStart.plus({days: i});
 
                 if (current < startDate) continue;
-                if (current > endDate)   break;
+                if (current > endDate) break;
 
                 if (days.includes(current.weekdayLong)) {
                     executionDates.push(current.toISODate());
@@ -113,7 +113,6 @@ function getRecurrenceTaskDates(recurrenceRule, startDate, endDate) {
             }
             current = current.plus({ months: step });
         }
-
     } else  {
         throw new Error('Wrong recurrence rule type')
     }
@@ -127,7 +126,8 @@ const createTask = async (data) => {
     const pcId   = data.pc_id;
     const taskTypeId = data.task_type_id;
     const taskDescription = data.task_description;
-    const executionDate =  DateTime.fromISO(data.execution_date);
+    const executionDate = DateTime.fromISO(data.execution_date, { zone: 'utc' });
+
     const startTime   = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
     const endTime    = DateTime.fromFormat(data.end_time,'HH:mm:ss');
 
@@ -193,8 +193,8 @@ const createRecurrenceTask = async (data) => {
     const recurrenceRule = typeof data.recurrence_pattern === 'string'
         ? JSON.parse(data.recurrence_pattern)
         : data.recurrence_pattern;
-    const startDate = DateTime.fromISO(data.start_date);
-    const endDate   = DateTime.fromISO(data.end_date);
+    const startDate     = DateTime.fromISO(data.start_date,     { zone: 'utc' });
+    const endDate       = DateTime.fromISO(data.end_date,       { zone: 'utc' });
 
 
 
@@ -274,8 +274,9 @@ const updateTask = async (data) => {
         const recurrenceRule = typeof data.recurrence_pattern === 'string'
             ? JSON.parse(data.recurrence_pattern)
             : data.recurrence_pattern;
-        const startDate = DateTime.fromISO(data.start_date);
-        const endDate   = DateTime.fromISO(data.end_date);
+
+        const startDate     = DateTime.fromISO(data.start_date,     { zone: 'utc' });
+        const endDate       = DateTime.fromISO(data.end_date,       { zone: 'utc' });
 
 
         await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
@@ -295,7 +296,6 @@ const updateTask = async (data) => {
         }
 
         const executionDates =getRecurrenceTaskDates(recurrenceRule, startDate, endDate);
-
 
         return await prisma.$transaction(async (tx) => {
 
@@ -328,7 +328,7 @@ const updateTask = async (data) => {
                         task_type_id:       taskTypeId,
                         recurrence_rule_id: rr.recurrence_rule_id,
                         task_description:   taskDescription,
-                        execution_date:     DateTime.fromISO(item).toJSDate(),
+                        execution_date:     DateTime.fromISO(item, { zone: 'utc' }).toJSDate(),
                         start_time:         startTime.toJSDate(),
                         end_time:           endTime.toJSDate(),
                         is_recurring:       true,
@@ -346,7 +346,7 @@ const updateTask = async (data) => {
 
     } else {
         if (!data.execution_date) throw new Error('Execution date is required');
-        const executionDate = DateTime.fromISO(data.execution_date);
+        const executionDate = DateTime.fromISO(data.execution_date, { zone: 'utc' });
 
 
         await validateTaskVariables(pcId,taskTypeId,taskDescription,startTime,endTime);
@@ -435,6 +435,7 @@ const deleteTask = async (data) => {
 
 const completeTask = async (data) => {
     const task_id = data.task_id;
+    const complete = data.complete;
 
 
     const existing_task = await prisma.task.findFirst({
@@ -448,7 +449,7 @@ const completeTask = async (data) => {
             task_id : task_id
         },
         data: {
-            is_completed : true
+            is_completed : complete
         }
     });
 
