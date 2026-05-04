@@ -11,7 +11,7 @@ import { useLang } from "../language/useLang.js";
 import About from "../components/aboutCaregiver";
 import SearchPatient from "../components/patientCaregiverSearch.jsx";
 import PatientCaregiver from "../components/patientCaregiver.jsx";
-// import TaskCalendar from "../components/TaskCalendar";
+import TaskCalendar from "../components/TaskCalendar";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
 import TaskCreate from "../components/createTask.jsx";
@@ -141,6 +141,8 @@ export default function AccountPage() {
                 return <SearchPatient user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "task_create":
                 return <TaskCreate user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+            case "task_calendar":
+                return <TaskCalendar user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             default:
                 return <div>Not found</div>;
         }
