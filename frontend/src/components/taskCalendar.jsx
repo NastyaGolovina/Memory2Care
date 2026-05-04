@@ -3,14 +3,15 @@ import { useLang } from "../language/useLang.js";
 import {
     Alert, Badge, Button, Calendar, Form, Input,
     Modal, Popconfirm, Radio, Select, Switch,
-    TimePicker, Typography, DatePicker
+    TimePicker, Typography, DatePicker, List, Avatar
 } from "antd";
 import dayjs from "dayjs";
 import { fetchWithAuth } from "../utils/fetchWithAuth.js";
 
 const { Title, Text } = Typography;
 const { RangePicker: TimeRangePicker } = TimePicker;
-import { CheckOutlined, CloseOutlined, RetweetOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, RetweetOutlined ,ScheduleOutlined} from "@ant-design/icons";
+
 export default function TaskCalendar({ user }) {
     const { t } = useLang();
 
@@ -315,6 +316,46 @@ export default function TaskCalendar({ user }) {
             <Calendar
                 cellRender={cellRender}
                 onPanelChange={(value) => setCurrentMonth(value)}
+            />
+            <List
+                style={{
+                    marginTop: 24,
+                    height: 500,
+                    overflowY: "auto"
+                }}
+                itemLayout="horizontal"
+                dataSource={[...tasks].sort((a, b) => dayjs(a.execution_date).unix() - dayjs(b.execution_date).unix())}
+                renderItem={(task) => {
+                    const isCompleted = task.is_completed;
+                    const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
+                    const iconColor   = isCompleted ? "#52c41a" : isOverdue ? "#ff4d4f" : "#faad14";
+
+                    return (
+                        <List.Item
+                            style={{ cursor: "pointer" }}
+                            onClick={() => openTask(task.task_id)}
+                        >
+                            <List.Item.Meta
+                                avatar={
+                                    <Avatar
+                                        icon={<ScheduleOutlined />}
+                                        style={{ backgroundColor: iconColor }}
+                                    />
+                                }
+                                title={
+                                    <span>
+                                        {task.is_recurring && (
+                                            <RetweetOutlined style={{ fontSize: 12, marginRight: 6, color: "#888" }} />
+                                        )}
+                                        {/* полное имя типа задачи или описание */}
+                                        {task.task_type?.task_type_name || task.task_description}
+                        </span>
+                                }
+                                description={dayjs(task.execution_date).format("DD.MM.YYYY")}
+                            />
+                        </List.Item>
+                    );
+                }}
             />
 
 
