@@ -590,10 +590,22 @@ const getTaskByCaregiverByDate = async (data) => {
             //     lte: endDate.toJSDate(),
             // },
         },
-            include: {
-                pc:        true,
-                task_type: true,
-            }
+        // where: {
+        //     pc_id: {
+        //         in: await prisma.patient_caregiver.findMany({
+        //             where: { caregiver_id },
+        //             select: { pc_id: true }
+        //         }).then(res => res.map(r => r.pc_id))
+        //     },
+        //     execution_date: {
+        //         gte: startDate.toJSDate(),
+        //         lte: endDate.toJSDate(),
+        //     },
+        // }
+        //     include: {
+        //         pc:        true,
+        //         task_type: true,
+        //     }
     });
     return tasks
 
