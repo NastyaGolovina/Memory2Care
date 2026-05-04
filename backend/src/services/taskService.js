@@ -128,8 +128,8 @@ const createTask = async (data) => {
     const taskDescription = data.task_description;
     const executionDate = DateTime.fromISO(data.execution_date, { zone: 'utc' });
 
-    const startTime   = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
-    const endTime    = DateTime.fromFormat(data.end_time,'HH:mm:ss');
+    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss', { zone: 'utc' });
+    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss', { zone: 'utc' });
 
 
 
@@ -187,8 +187,8 @@ const createRecurrenceTask = async (data) => {
     const taskTypeId = data.task_type_id;
     const taskDescription = data.task_description;
 
-    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
-    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss');
+    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss', { zone: 'utc' });
+    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss', { zone: 'utc' });
 
     const recurrenceRule = typeof data.recurrence_pattern === 'string'
         ? JSON.parse(data.recurrence_pattern)
@@ -235,7 +235,7 @@ const createRecurrenceTask = async (data) => {
                     task_type_id:       taskTypeId,
                     recurrence_rule_id: rr.recurrence_rule_id,
                     task_description:   taskDescription,
-                    execution_date:     DateTime.fromISO(item).toJSDate(),
+                    execution_date: DateTime.fromISO(item, { zone: 'utc' }).toJSDate(),
                     start_time:         startTime.toJSDate(),
                     end_time:           endTime.toJSDate(),
                     is_recurring:       true,
@@ -266,8 +266,8 @@ const updateTask = async (data) => {
     const taskTypeId = data.task_type_id;
     const taskDescription = data.task_description;
 
-    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss');
-    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss');
+    const startTime = DateTime.fromFormat(data.start_time, 'HH:mm:ss', { zone: 'utc' });
+    const endTime   = DateTime.fromFormat(data.end_time,   'HH:mm:ss', { zone: 'utc' });
 
 
     if(existing_task.is_recurring) {
