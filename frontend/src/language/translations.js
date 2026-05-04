@@ -165,7 +165,18 @@ export const translations = {
             day_of_week_required:     "Please select at least one day",
             day_of_month_required:    "Please enter day of month",
             every_months_required:    "Please enter interval in months",
-            created: "Task created successfully"
+            created: "Task created successfully",
+            completed:                "Completed",
+            edit:                     "Edit",
+            update:                   "Update",
+            delete:                   "Delete",
+            complete_btn:             "Mark Complete",
+            uncomplete_btn:           "Mark Incomplete",
+            delete_title:             "Delete Task",
+            delete_desc:              "Are you sure you want to delete this task?",
+            delete_ok:                "Yes",
+            delete_cancel:            "No",
+            task_info:                "Task Info",
         },
 
 
@@ -308,7 +319,18 @@ export const translations = {
             day_of_week_required:     "Selecione pelo menos um dia",
             day_of_month_required:    "Insira o dia do mês",
             every_months_required:    "Insira o intervalo em meses",
-            created: "Tarefa criada com sucesso"
+            created: "Tarefa criada com sucesso",
+            completed:                "Concluído",
+            edit:                     "Editar",
+            update:                   "Atualizar",
+            delete:                   "Eliminar",
+            complete_btn:             "Marcar como concluído",
+            uncomplete_btn:           "Marcar como não concluído",
+            delete_title:             "Eliminar tarefa",
+            delete_desc:              "Tem certeza que deseja eliminar esta tarefa?",
+            delete_ok:                "Sim",
+            delete_cancel:            "Não",
+            task_info:                "Informação da tarefa",
         },
 
     }
