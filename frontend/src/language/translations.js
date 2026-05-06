@@ -88,7 +88,8 @@ export const translations = {
                     task: "Task",
                     calendar: "Calendar",
                     history: "History",
-                    create_new: "Create new"
+                    create_new: "Create new",
+                    dashboard: "Dashboard"
                 },
             select: {
                 family_member: "Family Member",
@@ -243,7 +244,8 @@ export const translations = {
                 task: "Tarefa",
                 calendar: "Calendário",
                 history: "Histórico",
-                create_new: "Criar novo"
+                create_new: "Criar novo",
+                dashboard: "Painel"
             },
             select: {
                 family_member: "Familiar",
