@@ -179,6 +179,15 @@ export const translations = {
             delete_cancel:            "No",
             task_info:                "Task Info",
         },
+        dashboard: {
+            filter:         "Filter",
+            date_required:  "Please select a date range",
+            error_load:     "Failed to load dashboard data",
+            error_patients: "Failed to load patients",
+            loaded:         "Data loaded successfully",
+            no_data:        "No data for selected period",
+            completed:      "Completed",
+        },
 
 
     },
@@ -333,6 +342,15 @@ export const translations = {
             delete_ok:                "Sim",
             delete_cancel:            "Não",
             task_info:                "Informação da tarefa",
+        },
+        dashboard: {
+            filter:         "Filtrar",
+            date_required:  "Por favor, selecione um intervalo de datas",
+            error_load:     "Falha ao carregar dados do painel",
+            error_patients: "Falha ao carregar pacientes",
+            loaded:         "Dados carregados com sucesso",
+            no_data:        "Sem dados para o período selecionado",
+            completed:      "Concluído",
         },
 
     }
