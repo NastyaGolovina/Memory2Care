@@ -13,6 +13,7 @@ import SearchPatient from "../components/patientCaregiverSearch.jsx";
 import PatientPage from "../components/patientPage.jsx";
 import PatientCaregiver from "../components/patientCaregiver.jsx";
 import TaskCalendar from "../components/taskCalendar.jsx";
+import TaskDashboard from "../components/taskDashboard.jsx";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
 import TaskCreate from "../components/createTask.jsx";
@@ -100,7 +101,7 @@ export default function AccountPage() {
                 {
                     key: "patient_search",
                     label: t("caregiver.menu.search"),
-                }
+                },
             ]
         },
         {
@@ -111,13 +112,14 @@ export default function AccountPage() {
                     key: "task_calendar",
                     label: t("caregiver.menu.calendar"),
                 },
-                // {
-                //     key: "task_history",
-                //     label: t("caregiver.menu.history"),
-                // },
+
                 {
                     key: "task_create",
                     label: t("caregiver.menu.create_new"),
+                },
+                {
+                    key: "task_dashboard",
+                    label: t("caregiver.menu.dashboard"),
                 },
             ],
         },
@@ -144,6 +146,8 @@ export default function AccountPage() {
                 return <TaskCreate user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "task_calendar":
                 return <TaskCalendar user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+            case "task_dashboard":
+                return <TaskDashboard user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             default:
                 return <div>Not found</div>;
         }
