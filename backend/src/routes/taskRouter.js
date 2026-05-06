@@ -9,7 +9,9 @@ const { createTaskEntity,
     getTaskByPatientCaregiverDate,
     getTaskByPatientCaregiver,
     getTasksByCaregiver,
-    getTasksByCaregiverByDate} = require('../controllers/taskController');
+    getTasksByCaregiverByDate,
+    getNumOfTaskCompletionByCaregiverByDate,
+    getNumTaskCompletionByPCDate} = require('../controllers/taskController');
 const { authenticate } = require('../middleware/authMiddleware');
 
 
@@ -23,9 +25,11 @@ router.post('/delete', authenticate,  deleteTaskTaskEntity);
 router.post('/complete', authenticate,  finishTask);
 router.get('/get/id', authenticate,  getTaskByID);
 router.post('/get/pc-date', authenticate,  getTaskByPatientCaregiverDate);
+router.post('/get/pc-date/count', authenticate,  getNumTaskCompletionByPCDate);
 router.get('/get/pc', authenticate,  getTaskByPatientCaregiver);
 router.get('/get/caregiver', authenticate,  getTasksByCaregiver);
 router.post('/get/caregiver-date', authenticate,  getTasksByCaregiverByDate);
+router.post('/get/caregiver-date/count', authenticate,  getNumOfTaskCompletionByCaregiverByDate);
 
 
 module.exports = router;

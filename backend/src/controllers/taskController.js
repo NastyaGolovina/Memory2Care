@@ -7,7 +7,9 @@ const { createTask,
     getTaskByPCDate,
     getTaskByPC,
     getTaskByCaregiver,
-    getTaskByCaregiverByDate} = require("../services/taskService.js");
+    getTaskByCaregiverByDate,
+    getTaskCompletionByCaregiverByDate,
+    getTaskCompletionByPCDate} = require("../services/taskService.js");
 const { successResponse, errorResponse} = require('../models/response');
 const {getAllPatientsForCaregiver} = require("../services/caregiverService");
 
@@ -129,6 +131,26 @@ async function getTasksByCaregiver(req, res) {
     }
 
 }
+async function getNumOfTaskCompletionByCaregiverByDate(req, res) {
+    try {
+
+        const t = await getTaskCompletionByCaregiverByDate(req.body)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
+async function getNumTaskCompletionByPCDate(req, res) {
+    try {
+
+        const t = await getTaskCompletionByPCDate(req.body)
+        res.status(200).json(successResponse(t));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
 
 
 
@@ -141,4 +163,6 @@ module.exports = { createTaskEntity,
     getTaskByPatientCaregiverDate,
     getTaskByPatientCaregiver,
     getTasksByCaregiver,
-    getTasksByCaregiverByDate};
+    getTasksByCaregiverByDate,
+    getNumOfTaskCompletionByCaregiverByDate,
+    getNumTaskCompletionByPCDate};

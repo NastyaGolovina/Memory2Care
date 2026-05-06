@@ -601,7 +601,129 @@ const getTaskByCaregiverByDate = async (data) => {
 }
 
 
+const getTaskCompletionByCaregiverByDate = async (data) => {
+    const caregiver_id = parseInt(data.caregiver_id);
+    const startDate = DateTime.fromISO(data.start_date, { zone: 'utc' });
+    const endDate   = DateTime.fromISO(data.end_date,   { zone: 'utc' });
 
+    if (!caregiver_id) throw new Error('Caregiver ID is required');
+
+
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc: {
+                caregiver_id: caregiver_id
+            },
+            execution_date: {
+                gte: startDate.toJSDate(),
+                lte: endDate.toJSDate(),
+            }
+        },
+        include: {
+            pc: {
+                select: {
+                    anon_name: true
+                }
+            }
+        }
+    });
+
+    if (tasks.length === 0) {
+        throw new Error('No tasks found for this PC in the selected date range');
+    }
+
+    const tasksCompletion = {}
+
+    tasks.forEach(task => {
+        let pc =task.pc_id
+        if (tasksCompletion[pc] === undefined ) {
+            tasksCompletion[pc] = {
+                anon_name :  task.pc.anon_name,
+                is_completed : 0,
+                is_not_completed : 0,
+                total : 0
+            }
+        }
+        tasksCompletion[pc].total++
+        if(task.is_completed)   {
+            tasksCompletion[pc].is_completed++
+        } else {
+            tasksCompletion[pc].is_not_completed++
+        }
+
+    });
+
+    return tasksCompletion
+
+}
+
+
+const getTaskCompletionByPCDate = async (data) => {
+    const pc_id = data.pc_id;
+
+    const startDate     = DateTime.fromISO(data.start_date,     { zone: 'utc' });
+    const endDate       = DateTime.fromISO(data.end_date,       { zone: 'utc' });
+
+
+    if (!pc_id)        throw new Error('Patient-caregiver ID is required');
+
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate <= startDate) throw new Error('End date must be later than start date');
+
+
+
+
+
+    const tasks = await prisma.task.findMany({
+        where: {
+            pc_id: pc_id,
+            execution_date: {
+                gte: startDate.toJSDate(),
+                lte: endDate.toJSDate(),
+            },
+        },
+        include: {
+            pc: {
+                select: {
+                    anon_name: true
+                }
+            },
+        }
+    });
+
+    if (tasks.length === 0) {
+        throw new Error('No tasks found for this PC in the selected date range');
+    }
+
+
+    const result = {
+        pc_id: pc_id,
+        anon_name: tasks[0]?.pc?.anon_name || null,
+        is_completed: 0,
+        is_not_completed: 0,
+        total: 0
+    };
+
+    tasks.forEach(task => {
+        result.total++;
+
+        if (task.is_completed) {
+            result.is_completed++;
+        } else {
+            result.is_not_completed++;
+        }
+    });
+
+    return result;
+
+}
 
 module.exports = { createTask,
                     createRecurrenceTask,
@@ -612,4 +734,6 @@ module.exports = { createTask,
                     getTaskByPCDate,
                     getTaskByPC,
                     getTaskByCaregiver,
-                    getTaskByCaregiverByDate };
+                    getTaskByCaregiverByDate,
+                    getTaskCompletionByCaregiverByDate,
+                    getTaskCompletionByPCDate};
