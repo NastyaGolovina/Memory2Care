@@ -1,4 +1,4 @@
-const { approveCaregiver ,getAllPatientsForCaregiver,updateCaregiver, getCaregiverProfileById} = require("../services/caregiverService");
+const { approveCaregiver ,getAllPatientsForCaregiver,updateCaregiver, getCaregiverProfileById,getNotApprovedCaregivers} = require("../services/caregiverService");
 const {successResponse, errorResponse} = require("../models/response");
 
 async function approveCaregiverEntity(req, res) {
@@ -53,6 +53,16 @@ async function getCaregiverProfileByCaregiverId(req, res) {
     }
 
 }
+async function getNotApprovedCaregiversEntity(req, res) {
+    try {
+
+        const c = await getNotApprovedCaregivers()
+        res.status(200).json(successResponse(c));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
 
 
-module.exports = { approveCaregiverEntity,getPatientsByCaregiver,updatedCaregiverEntity,getCaregiverProfileByCaregiverId };
+module.exports = { approveCaregiverEntity,getPatientsByCaregiver,updatedCaregiverEntity,getCaregiverProfileByCaregiverId,getNotApprovedCaregiversEntity };

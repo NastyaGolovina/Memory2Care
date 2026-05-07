@@ -99,4 +99,40 @@ const getCaregiverProfileById = async (data) => {
         approved: c.approved
     };
 };
-module.exports = { approveCaregiver, getAllPatientsForCaregiver, updateCaregiver,getCaregiverProfileById};
+
+
+
+const getNotApprovedCaregivers = async () => {
+
+    const caregivers = await prisma.caregiver.findMany({
+        where: {
+            approved: false,
+        },
+        include: {
+            user: {
+                select: {
+                    user_id: true,
+                    email: true,
+                    role: true,
+                    created_date_time: true,
+                }
+            }
+        }
+    });
+
+    return caregivers.map(c => ({
+        caregiver_id: c.caregiver_id,
+        name: c.name,
+        phone: c.phone,
+        address: c.address,
+        approved: c.approved,
+
+        user: {
+            user_id: c.user.user_id,
+            email: c.user.email,
+            role: c.user.role,
+            created_date_time: c.user.created_date_time,
+        }
+    }));
+};
+module.exports = { approveCaregiver, getAllPatientsForCaregiver, updateCaregiver,getCaregiverProfileById,getNotApprovedCaregivers};
