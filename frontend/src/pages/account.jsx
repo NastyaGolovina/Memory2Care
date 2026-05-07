@@ -134,6 +134,41 @@ export default function AccountPage() {
     // };
     //
 
+
+
+
+
+
+
+
+    const adminMenuItems = [
+        {
+            key: "admin_dashboard",
+            label: t("admin.dashboard"),
+        },
+        {
+            key: "admin_users",
+            label: t("admin.users"),
+        },
+        {
+            key: "admin_caregivers",
+            label: t("admin.caregivers"),
+        },
+        {
+            key: "admin_analytics",
+            label: t("admin.analytics"),
+        },
+        {
+            key: "web_design",
+            label: t("admin.web_design"),
+        },
+
+    ];
+
+
+
+
+
     const renderContent = () => {
         switch (selectedKey) {
             case "about":
