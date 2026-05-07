@@ -98,8 +98,8 @@ export default function TaskCalendar({ user }) {
     //         .catch(() => setError("Failed to load tasks"));
     // }, [user]);
     //
-    useEffect(() => { loadTasks(currentMonth); }, [currentMonth, loadTasks]);
-
+    // useEffect(() => { loadTasks(currentMonth); }, [currentMonth, loadTasks]);
+    useEffect(() => { loadTasks(currentMonth); }, [currentMonth, loadTasks, calendarMode]);
 
     const openTask = (taskId) => {
         setModalError(null);
@@ -427,7 +427,7 @@ export default function TaskCalendar({ user }) {
                     { key: "day",   label: t("task.day")   },
                 ].map(({ key, label }) => (
                     <Button key={key} type={calendarMode === key ? "primary" : "default"}
-                            onClick={() => setCalendarMode(key)}>
+                            onClick={() => { setCalendarMode(key); setCurrentMonth(selectedDate); }}>
                         {label}
                     </Button>
                 ))}
