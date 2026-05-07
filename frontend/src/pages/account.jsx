@@ -190,7 +190,25 @@ export default function AccountPage() {
 
                         <Content style={{ padding: '0 24px' }}>
                             {user.role === "ADMIN" && (
-                                <div>
+                                <Layout
+                                    style={{
+                                        padding: '24px 0',
+                                        background: colorBgContainer,
+                                        borderRadius: borderRadiusLG
+                                    }}
+                                >
+                                    <Sider
+                                        style={{ background: colorBgContainer }}
+                                        width={200}
+                                    >
+                                        <Menu
+                                            mode="inline"
+                                            selectedKeys={[selectedKey]}
+                                            onClick={(e) => setSelectedKey(e.key)}
+                                            style={{ height: '100%' }}
+                                            items={adminMenuItems}
+                                        />
+                                    </Sider>
 
                                     <h2>Admin Panel</h2>
                                     {/*/!* твой AdminPanel компонент *!/*/}
