@@ -153,7 +153,6 @@ export const translations = {
             sunday: "Sunday", monday: "Monday", tuesday: "Tuesday",
             wednesday: "Wednesday", thursday: "Thursday",
             friday: "Friday", saturday: "Saturday",
-            // required messages
             pc_id_required:           "Please select a patient",
             task_type_required:       "Please select a task type",
             description_required:     "Please enter a description",
@@ -178,6 +177,12 @@ export const translations = {
             delete_ok:                "Yes",
             delete_cancel:            "No",
             task_info:                "Task Info",
+            week: "Week",
+            weeks: "Weeks",
+            day: "Day",
+            days: "Days",
+            month: "Month",
+            months: "Months",
         },
         dashboard: {
             filter:         "Filter",
@@ -342,6 +347,13 @@ export const translations = {
             delete_ok:                "Sim",
             delete_cancel:            "Não",
             task_info:                "Informação da tarefa",
+            week: "Semana",
+            weeks: "Semanas",
+            day: "Dia",
+            days: "Dias",
+            month: "Mês",
+            months: "Meses",
+
         },
         dashboard: {
             filter:         "Filtrar",
