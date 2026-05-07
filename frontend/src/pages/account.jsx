@@ -14,6 +14,7 @@ import PatientPage from "../components/patientPage.jsx";
 import PatientCaregiver from "../components/patientCaregiver.jsx";
 import TaskCalendar from "../components/taskCalendar.jsx";
 import TaskDashboard from "../components/taskDashboard.jsx";
+import AdminApproveCaregiver from "../components/adminApproveCaregiver.jsx";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
 import TaskCreate from "../components/createTask.jsx";
@@ -84,7 +85,11 @@ export default function AccountPage() {
 
     // const [activeTab, setActiveTab] = useState("Log In");
     const [activeTab, setActiveTab] = useState("login");
-    const [selectedKey, setSelectedKey] = useState("about");
+    const [selectedKey, setSelectedKey] = useState(
+        user?.role === "ADMIN"
+            ? "admin_dashboard"
+            : "about"
+    );
     const items2 = [
         {
             key: "about",
@@ -183,10 +188,36 @@ export default function AccountPage() {
                 return <TaskCalendar user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "task_dashboard":
                 return <TaskDashboard user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+
+
+
+
+
+
+
+            // ADMIN
+            case "admin_dashboard":
+                return <div>{t("admin.dashboard")}</div>
+
+            case "admin_users":
+                return <div> {t("admin.users")}</div>
+
+            case "admin_caregivers":
+                return <AdminApproveCaregiver user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
+
+            case "admin_analytics":
+                return <div>{t("admin.analytics")}</div>
+
+            case "web_design":
+                return <div> {t("admin.web_design")}</div>
+
             default:
                 return <div>Not found</div>;
+
         }
     };
+
+
     if (user) {
         return (
             // <Layout>
@@ -245,9 +276,10 @@ export default function AccountPage() {
                                         />
                                     </Sider>
 
-                                    <h2>Admin Panel</h2>
-                                    {/*/!* твой AdminPanel компонент *!/*/}
-                                </div>
+                                    <Content style={{ padding: "0 24px" }}>
+                                        {renderContent()}
+                                    </Content>
+                                </Layout>
                             )}
                             {/*{user.role === "PATIENT" && (*/}
                             {/*    <PatientPage*/}
