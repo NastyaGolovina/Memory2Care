@@ -3,8 +3,12 @@ import { useLang } from "../language/useLang.js";
 import {
     Alert, Badge, Button, Calendar, Form, Input,
     Modal, Popconfirm, Radio, Select, Switch,
-    TimePicker, Typography, DatePicker, List, Avatar
+    TimePicker, Typography, DatePicker
 } from "antd";
+
+
+import List from "antd/es/list";
+import Avatar from "antd/es/avatar";
 import dayjs from "dayjs";
 import { fetchWithAuth } from "../utils/fetchWithAuth.js";
 
@@ -15,6 +19,9 @@ import { CheckOutlined, CloseOutlined, RetweetOutlined ,ScheduleOutlined} from "
 export default function TaskCalendar({ user }) {
     const { t } = useLang();
 
+
+    const [calendarMode, setCalendarMode] = useState("month"); // "month" | "week" | "day"
+    const [selectedDate, setSelectedDate]  = useState(dayjs());
 
     const [currentMonth, setCurrentMonth] = useState(dayjs());
     const [tasks, setTasks]               = useState([]);
@@ -48,14 +55,12 @@ export default function TaskCalendar({ user }) {
             .catch(() => setError("Failed to load task types"));
     }, [user]);
 
-
     const loadTasks = useCallback((month) => {
         if (!user) return;
         const caregiverId = user.profile.caregiver_id || user.id;
 
-
-        const startDate = month.startOf("month").format("YYYY-MM-DD");
-        const endDate   = month.endOf("month").format("YYYY-MM-DD");
+        const startDate = month.startOf("month").subtract(1, "week").format("YYYY-MM-DD");
+        const endDate   = month.endOf("month").add(1, "week").format("YYYY-MM-DD");
 
         fetchWithAuth("http://localhost:3000/api/task/get/caregiver-date", {
             method: "POST",
@@ -64,13 +69,35 @@ export default function TaskCalendar({ user }) {
         })
             .then(r => r.json())
             .then(data => {
-                console.log(data)
                 if (data.success) setTasks(data.data);
                 else setError(data.error?.message || "Failed to load tasks");
             })
             .catch(() => setError("Failed to load tasks"));
     }, [user]);
 
+
+    // const loadTasks = useCallback((month) => {
+    //     if (!user) return;
+    //     const caregiverId = user.profile.caregiver_id || user.id;
+    //
+    //
+    //     const startDate = month.startOf("month").format("YYYY-MM-DD");
+    //     const endDate   = month.endOf("month").format("YYYY-MM-DD");
+    //
+    //     fetchWithAuth("http://localhost:3000/api/task/get/caregiver-date", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ caregiver_id: caregiverId, start_date: startDate, end_date: endDate }),
+    //     })
+    //         .then(r => r.json())
+    //         .then(data => {
+    //             console.log(data)
+    //             if (data.success) setTasks(data.data);
+    //             else setError(data.error?.message || "Failed to load tasks");
+    //         })
+    //         .catch(() => setError("Failed to load tasks"));
+    // }, [user]);
+    //
     useEffect(() => { loadTasks(currentMonth); }, [currentMonth, loadTasks]);
 
 
@@ -250,49 +277,83 @@ export default function TaskCalendar({ user }) {
     };
 
 
+    const getTasksForDay = (date) =>
+        tasks.filter(task => dayjs(task.execution_date).format("YYYY-MM-DD") === date.format("YYYY-MM-DD"));
+
+    const renderTaskBadges = (dayTasks) => (
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {dayTasks.map(task => {
+                const isCompleted = task.is_completed;
+                const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
+                const status      = isCompleted ? "success" : isOverdue ? "error" : "warning";
+                return (
+                    <li key={task.task_id}>
+                        <Badge
+                            status={status}
+                            text={
+                                <span style={{ cursor: "pointer", fontSize: 12 }} onClick={() => openTask(task.task_id)}>
+                                {task.is_recurring && <RetweetOutlined style={{ fontSize: 12 }} />}
+                                    {task.task_type?.task_type_name || task.task_description?.slice(0, 10)}...
+                            </span>
+                            }
+                        />
+                    </li>
+                );
+            })}
+        </ul>
+    );
+
     const cellRender = (current, info) => {
         if (info.type !== "date") return info.originNode;
-
-
-        const dayTasks = tasks.filter(task => {
-            const execDate = dayjs(task.execution_date).format("YYYY-MM-DD");
-            return execDate === current.format("YYYY-MM-DD");
-        });
-
+        const dayTasks = getTasksForDay(current);
         if (!dayTasks.length) return null;
-
-        return (
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {dayTasks.map(task => {
-
-                    const isCompleted = task.is_completed;
-                    const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
-                    const status      = isCompleted ? "success" : isOverdue ? "error" : "warning";
-
-                    return (
-                        <li key={task.task_id}>
-                            <Badge
-                                status={status}
-                                text={
-                                    <span
-                                        style={{ cursor: "pointer", fontSize: 12 }}
-                                        onClick={() => openTask(task.task_id)}
-                                    >
-
-                                        {task.is_recurring && <RetweetOutlined style={{ fontSize: 12 }} />}
-                                        {task.task_type?.task_type_name || task.task_description?.slice(0, 10)}
-                                        ...
-
-                                    </span>
-                                }
-                            />
-                        </li>
-                    );
-                })}
-            </ul>
-        );
+        return renderTaskBadges(dayTasks);
     };
 
+
+    // const cellRender = (current, info) => {
+    //     if (info.type !== "date") return info.originNode;
+    //
+    //
+    //     const dayTasks = tasks.filter(task => {
+    //         const execDate = dayjs(task.execution_date).format("YYYY-MM-DD");
+    //         return execDate === current.format("YYYY-MM-DD");
+    //     });
+    //
+    //     if (!dayTasks.length) return null;
+    //
+    //     return (
+    //         <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+    //             {dayTasks.map(task => {
+    //
+    //                 const isCompleted = task.is_completed;
+    //                 const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
+    //                 const status      = isCompleted ? "success" : isOverdue ? "error" : "warning";
+    //
+    //                 return (
+    //                     <li key={task.task_id}>
+    //                         <Badge
+    //                             status={status}
+    //                             text={
+    //                                 <span
+    //                                     style={{ cursor: "pointer", fontSize: 12 }}
+    //                                     onClick={() => openTask(task.task_id)}
+    //                                 >
+    //
+    //                                     {task.is_recurring && <RetweetOutlined style={{ fontSize: 12 }} />}
+    //                                     {task.task_type?.task_type_name || task.task_description?.slice(0, 10)}
+    //                                     ...
+    //
+    //                                 </span>
+    //                             }
+    //                         />
+    //                     </li>
+    //                 );
+    //             })}
+    //         </ul>
+    //     );
+    // };
+    //
 
     const disabled = !isEdit;
 
@@ -313,50 +374,215 @@ export default function TaskCalendar({ user }) {
                        onClose={() => setSuccess(null)} style={{ marginBottom: 16 }} />
             )}
 
-            <Calendar
-                cellRender={cellRender}
-                onPanelChange={(value) => setCurrentMonth(value)}
-            />
-            <List
-                style={{
-                    marginTop: 24,
-                    height: 500,
-                    overflowY: "auto"
-                }}
-                itemLayout="horizontal"
-                dataSource={[...tasks].sort((a, b) => dayjs(a.execution_date).unix() - dayjs(b.execution_date).unix())}
-                renderItem={(task) => {
-                    const isCompleted = task.is_completed;
-                    const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
-                    const iconColor   = isCompleted ? "#52c41a" : isOverdue ? "#ff4d4f" : "#faad14";
+            {/*<Calendar*/}
+            {/*    cellRender={cellRender}*/}
+            {/*    onPanelChange={(value) => setCurrentMonth(value)}*/}
+            {/*/>*/}
+            {/*<List*/}
+            {/*    style={{*/}
+            {/*        marginTop: 24,*/}
+            {/*        height: 500,*/}
+            {/*        overflowY: "auto"*/}
+            {/*    }}*/}
+            {/*    itemLayout="horizontal"*/}
+            {/*    dataSource={[...tasks].sort((a, b) => dayjs(a.execution_date).unix() - dayjs(b.execution_date).unix())}*/}
+            {/*    renderItem={(task) => {*/}
+            {/*        const isCompleted = task.is_completed;*/}
+            {/*        const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");*/}
+            {/*        const iconColor   = isCompleted ? "#52c41a" : isOverdue ? "#ff4d4f" : "#faad14";*/}
 
-                    return (
-                        <List.Item
-                            style={{ cursor: "pointer" }}
-                            onClick={() => openTask(task.task_id)}
-                        >
-                            <List.Item.Meta
-                                avatar={
-                                    <Avatar
-                                        icon={<ScheduleOutlined />}
-                                        style={{ backgroundColor: iconColor }}
-                                    />
-                                }
-                                title={
-                                    <span>
-                                        {task.is_recurring && (
-                                            <RetweetOutlined style={{ fontSize: 12, marginRight: 6, color: "#888" }} />
-                                        )}
-                                        {/* полное имя типа задачи или описание */}
-                                        {task.task_type?.task_type_name || task.task_description}
-                        </span>
-                                }
-                                description={dayjs(task.execution_date).format("DD.MM.YYYY")}
+            {/*        return (*/}
+            {/*            <List.Item*/}
+            {/*                style={{ cursor: "pointer" }}*/}
+            {/*                onClick={() => openTask(task.task_id)}*/}
+            {/*            >*/}
+            {/*                <List.Item.Meta*/}
+            {/*                    avatar={*/}
+            {/*                        <Avatar*/}
+            {/*                            icon={<ScheduleOutlined />}*/}
+            {/*                            style={{ backgroundColor: iconColor }}*/}
+            {/*                        />*/}
+            {/*                    }*/}
+            {/*                    title={*/}
+            {/*                        <span>*/}
+            {/*                            {task.is_recurring && (*/}
+            {/*                                <RetweetOutlined style={{ fontSize: 12, marginRight: 6, color: "#888" }} />*/}
+            {/*                            )}*/}
+            {/*                            /!* полное имя типа задачи или описание *!/*/}
+            {/*                            {task.task_type?.task_type_name || task.task_description}*/}
+            {/*            </span>*/}
+            {/*                    }*/}
+            {/*                    description={dayjs(task.execution_date).format("DD.MM.YYYY")}*/}
+            {/*                />*/}
+            {/*            </List.Item>*/}
+            {/*        );*/}
+            {/*    }}*/}
+            {/*/>*/}
+
+
+            <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                {[
+                    { key: "month", label: t("task.month") },
+                    { key: "week",  label: t("task.week")  },
+                    { key: "day",   label: t("task.day")   },
+                ].map(({ key, label }) => (
+                    <Button key={key} type={calendarMode === key ? "primary" : "default"}
+                            onClick={() => setCalendarMode(key)}>
+                        {label}
+                    </Button>
+                ))}
+            </div>
+
+
+            {calendarMode === "month" && (
+                <Calendar
+                    cellRender={cellRender}
+                    onPanelChange={(value) => { setCurrentMonth(value); setSelectedDate(value); }}
+                    onSelect={(date) => setSelectedDate(date)}
+                />
+            )}
+
+            {calendarMode === "week" && (() => {
+                const startOfWeek = selectedDate.startOf("week");
+                const days = Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, "day"));
+                return (
+                    <div>
+                        {/* Week navigation */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                            <Button onClick={() => setSelectedDate(d => d.subtract(1, "week"))}>{"<"}</Button>
+                            <Text strong>
+                                {startOfWeek.format("MMM D")} – {startOfWeek.add(6, "day").format("MMM D, YYYY")}
+                            </Text>
+                            <Button onClick={() => setSelectedDate(d => d.add(1, "week"))}>{">"}</Button>
+                            <Button size="small" onClick={() => setSelectedDate(dayjs())}>Today</Button>
+                        </div>
+                        {/* Week grid */}
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid #f0f0f0", borderRadius: 8, overflow: "hidden" }}>
+                            {days.map(day => {
+                                const dayTasks  = getTasksForDay(day);
+                                const isToday   = day.isSame(dayjs(), "day");
+                                const isSelected = day.isSame(selectedDate, "day");
+                                return (
+                                    <div
+                                        key={day.format("YYYY-MM-DD")}
+                                        onClick={() => setSelectedDate(day)}
+                                        style={{
+                                            minHeight: 120,
+                                            padding: "8px 6px",
+                                            borderRight: "1px solid #f0f0f0",
+                                            cursor: "pointer",
+                                            background: isSelected ? "#e6f4ff" : "white",
+                                        }}
+                                    >
+                                        <div style={{ marginBottom: 4 }}>
+
+                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
+                                                <Text style={{ fontSize: 11, color: "#8c8c8c", textTransform: "uppercase", letterSpacing: 1 }}>
+                                                    {day.format("ddd")}
+                                                </Text>
+                                                <div style={{
+                                                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                                                    width: 28, height: 28, borderRadius: "50%",
+                                                    backgroundColor: isToday ? "#1677ff" : "transparent",
+                                                    color: isToday ? "white" : "#262626",
+                                                    fontWeight: isToday ? 600 : 400,
+                                                    fontSize: 14,
+                                                }}>
+                                                    {day.format("D")}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {renderTaskBadges(dayTasks)}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })()}
+
+
+            {calendarMode === "day" && (() => {
+                const dayTasks = getTasksForDay(selectedDate);
+                return (
+                    <div>
+                        {/* Day navigation */}
+                        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                            <Button onClick={() => setSelectedDate(d => d.subtract(1, "day"))}>{"<"}</Button>
+                            <Text strong>{selectedDate.format("dddd, MMMM D, YYYY")}</Text>
+                            <Button onClick={() => setSelectedDate(d => d.add(1, "day"))}>{">"}</Button>
+                            <Button size="small" onClick={() => setSelectedDate(dayjs())}>Today</Button>
+                        </div>
+                        {dayTasks.length === 0 ? (
+                            <Text type="secondary">No tasks for this day</Text>
+                        ) : (
+                            <List
+                                bordered
+                                dataSource={dayTasks.sort((a, b) => dayjs(a.start_time, "HH:mm:ss").unix() - dayjs(b.start_time, "HH:mm:ss").unix())}
+                                renderItem={task => {
+                                    const isCompleted = task.is_completed;
+                                    const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
+                                    const iconColor   = isCompleted ? "#52c41a" : isOverdue ? "#ff4d4f" : "#faad14";
+                                    return (
+                                        <List.Item style={{ cursor: "pointer" }} onClick={() => openTask(task.task_id)}>
+                                            <List.Item.Meta
+                                                avatar={<Avatar icon={<ScheduleOutlined />} style={{ backgroundColor: iconColor }} />}
+                                                title={
+                                                    <span>
+                                            {task.is_recurring && <RetweetOutlined style={{ fontSize: 12, marginRight: 6, color: "#888" }} />}
+                                                        {task.task_type?.task_type_name || task.task_description}
+                                        </span>
+                                                }
+                                                description={`${dayjs(task.start_time, "HH:mm:ss").format("HH:mm")} – ${dayjs(task.end_time, "HH:mm:ss").format("HH:mm")}`}
+                                            />
+                                        </List.Item>
+                                    );
+                                }}
                             />
-                        </List.Item>
-                    );
-                }}
-            />
+                        )}
+                    </div>
+                );
+            })()}
+
+            {calendarMode !== "day" && (
+                <List
+                    style={{ marginTop: 24, height: 500, overflowY: "auto" }}
+                    itemLayout="horizontal"
+                    dataSource={(() => {
+                        let filtered = tasks;
+                        if (calendarMode === "week") {
+                            const s = selectedDate.startOf("week");
+                            const e = s.add(6, "day");
+                            filtered = tasks.filter(t => {
+                                const d = dayjs(t.execution_date);
+                                return (d.isAfter(s, "day") || d.isSame(s, "day")) && (d.isBefore(e, "day") || d.isSame(e, "day"));
+                            });
+                        } else if (calendarMode === "day") {
+                            filtered = tasks.filter(t => dayjs(t.execution_date).isSame(selectedDate, "day"));
+                        }
+                        return [...filtered].sort((a, b) => dayjs(a.execution_date).unix() - dayjs(b.execution_date).unix());
+                    })()}
+                    renderItem={(task) => {
+                        const isCompleted = task.is_completed;
+                        const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
+                        const iconColor   = isCompleted ? "#52c41a" : isOverdue ? "#ff4d4f" : "#faad14";
+                        return (
+                            <List.Item style={{ cursor: "pointer" }} onClick={() => openTask(task.task_id)}>
+                                <List.Item.Meta
+                                    avatar={<Avatar icon={<ScheduleOutlined />} style={{ backgroundColor: iconColor }} />}
+                                    title={
+                                        <span>
+                                {task.is_recurring && <RetweetOutlined style={{ fontSize: 12, marginRight: 6, color: "#888" }} />}
+                                            {task.task_type?.task_type_name || task.task_description}
+                            </span>
+                                    }
+                                    description={dayjs(task.execution_date).format("DD.MM.YYYY")}
+                                />
+                            </List.Item>
+                        );
+                    }}
+                />
+            )}
 
 
             <Modal
@@ -370,7 +596,7 @@ export default function TaskCalendar({ user }) {
                     setTimeout(() => setSelectedTask(null), 0);
                 }}
                 footer={null}
-                maskClosable={true}
+                mask={{ closable: true }}
                 width={600}
             >
 
