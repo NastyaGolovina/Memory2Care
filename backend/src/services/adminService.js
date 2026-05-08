@@ -1,6 +1,5 @@
 const prisma = require("../config/prismaClient");
-
-
+const { DateTime } = require('luxon');
 
 
 
@@ -80,5 +79,26 @@ const getUsers = async () => {
     return  result
 }
 
+const getLogsCountByPeriod = async (data) => {
+    const startDate = DateTime.fromISO(data.start_date, { zone: 'utc' }).startOf('day');
+    const endDate   = DateTime.fromISO(data.end_date, { zone: 'utc' }).endOf('day');
 
-module.exports = {getUsers,getStats };
+    if (!startDate.isValid) throw new Error('Start date is not valid. Expected format: YYYY-MM-DD');
+    if (!endDate.isValid)   throw new Error('End date is not valid. Expected format: YYYY-MM-DD');
+    if (endDate < startDate) throw new Error('End date must be later than start date');
+
+    const count = await prisma.log.count({
+        where: {
+            log_datetime: {
+                gte: startDate.toJSDate(),
+                lte: endDate.toJSDate(),
+            }
+        }
+    });
+
+    return count;
+}
+
+
+
+module.exports = {getUsers,getStats,getLogsCountByPeriod };
