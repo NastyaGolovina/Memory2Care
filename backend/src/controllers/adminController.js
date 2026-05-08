@@ -1,4 +1,4 @@
-const {getUsers} = require("../services/adminService");
+const {getUsers, getStats} = require("../services/adminService");
 const {successResponse, errorResponse} = require("../models/response");
 
 
@@ -13,6 +13,17 @@ async function getAllUsers(req, res) {
 
 }
 
+async function getAdminStats(req, res) {
+    try {
+
+        const u = await getStats()
+        res.status(200).json(successResponse(u));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
 
 
-module.exports = { getAllUsers };
+
+module.exports = { getAllUsers,getAdminStats };

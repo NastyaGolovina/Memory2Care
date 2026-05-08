@@ -3,6 +3,49 @@ const prisma = require("../config/prismaClient");
 
 
 
+
+const getStats = async () => {
+
+    const activePatients = await prisma.patient.count({
+        where: {
+            active: true,
+        }
+    });
+
+    const approvedCaregivers = await prisma.caregiver.count({
+        where: {
+            approved: true,
+        }
+    });
+
+    const totalTasks = await prisma.task.count();
+
+    const completedTasks = await prisma.task.count({
+        where: {
+            is_completed: true,
+        }
+    });
+
+    const uncompletedTasks = await prisma.task.count({
+        where: {
+            is_completed: false,
+        }
+    });
+
+
+    return {
+        activePatients,
+        approvedCaregivers,
+        task: {
+            totalTasks,
+            completedTasks,
+            uncompletedTasks,
+        }
+    };
+}
+
+
+
 const getUsers = async () => {
 
     const users = await prisma.user.findMany({
@@ -37,5 +80,5 @@ const getUsers = async () => {
     return  result
 }
 
-// module.exports = { getLogs, getTasksStats,getLogsCountByPeriod,getUsers };
-module.exports = {getUsers };
+
+module.exports = {getUsers,getStats };
