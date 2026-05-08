@@ -15,6 +15,7 @@ import PatientCaregiver from "../components/patientCaregiver.jsx";
 import TaskCalendar from "../components/taskCalendar.jsx";
 import TaskDashboard from "../components/taskDashboard.jsx";
 import AdminApproveCaregiver from "../components/adminApproveCaregiver.jsx";
+import AdminUsers from "../components/adminUsers.jsx";
 // import TaskHistory from "../components/TaskHistory";
 // import TaskCreate from "../components/TaskCreate";
 import TaskCreate from "../components/createTask.jsx";
@@ -200,8 +201,7 @@ export default function AccountPage() {
                 return <div>{t("admin.dashboard")}</div>
 
             case "admin_users":
-                return <div> {t("admin.users")}</div>
-
+                return  <AdminUsers user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
             case "admin_caregivers":
                 return <AdminApproveCaregiver user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
 
