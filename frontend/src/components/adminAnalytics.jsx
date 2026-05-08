@@ -13,7 +13,6 @@ import { fetchWithAuth } from "../utils/fetchWithAuth.js";
 const { Title, Text } = Typography;
 
 const PAGE_SIZE = 5;
-
 export default function AdminAnalytics({ user, setUser, handleAutoLogout }) {
     const { t } = useLang();
 
