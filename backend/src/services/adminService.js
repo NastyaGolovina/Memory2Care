@@ -2,6 +2,30 @@ const prisma = require("../config/prismaClient");
 const { DateTime } = require('luxon');
 
 
+const getLogs = async (data) => {
+    const page = data?.page || 1;
+    const limit = data?.limit || 5;
+
+    const skip = (page - 1) * limit;
+
+    const logs = await prisma.log.findMany({
+        orderBy: {
+            log_datetime: 'desc',
+        },
+        skip,
+        take: Number(limit),
+    });
+
+    const total = await prisma.log.count();
+
+    return {
+        data: logs,
+        total,
+        page,
+        hasMore: skip + logs.length < total,
+    };
+};
+
 
 const getStats = async () => {
 
@@ -101,4 +125,4 @@ const getLogsCountByPeriod = async (data) => {
 
 
 
-module.exports = {getUsers,getStats,getLogsCountByPeriod };
+module.exports = {getUsers,getStats,getLogsCountByPeriod,getLogs };

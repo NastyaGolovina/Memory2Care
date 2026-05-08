@@ -1,4 +1,4 @@
-const {getUsers, getStats,getLogsCountByPeriod} = require("../services/adminService");
+const {getUsers, getStats,getLogsCountByPeriod,getLogs} = require("../services/adminService");
 const {successResponse, errorResponse} = require("../models/response");
 
 
@@ -34,8 +34,18 @@ async function getLogsCountByPeriodOfTime(req, res) {
     }
 
 }
+async function getLogsPage(req, res) {
+    try {
+
+        const l = await getLogs(req.body)
+        res.status(200).json(successResponse(l));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_ERROR'));
+    }
+
+}
 
 
 
 
-module.exports = { getAllUsers,getAdminStats,getLogsCountByPeriodOfTime };
+module.exports = { getAllUsers,getAdminStats,getLogsCountByPeriodOfTime ,getLogsPage};
