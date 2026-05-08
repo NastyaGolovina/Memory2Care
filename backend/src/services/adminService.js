@@ -22,16 +22,19 @@ const getUsers = async () => {
         }
     });
 
-    return users.map(user => ({
-        user_id: user.user_id,
-        email: user.email,
-        role: user.role,
-        created_date_time: user.created_date_time,
+    const result = [];
 
-        patient: user.Patient[0] || null,
-
-        caregiver: user.Caregiver[0] || null,
-    }));
+    for (const user of users) {
+        result.push({
+            user_id: user.user_id,
+            email: user.email,
+            role: user.role,
+            created_date_time: user.created_date_time,
+            patient: user.Patient?.[0] || null,
+            caregiver: user.Caregiver?.[0] || null,
+        });
+    }
+    return  result
 }
 
 // module.exports = { getLogs, getTasksStats,getLogsCountByPeriod,getUsers };
