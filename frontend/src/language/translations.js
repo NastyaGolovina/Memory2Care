@@ -253,6 +253,11 @@ export const translations = {
                 error_chart:          "Failed to load login data",
                 error_server:         "Server error",
             },
+            analytics_page: {
+                load_more:    "Load more",
+                error_load:   "Failed to load logs",
+                error_server: "Server error",
+            },
         },
 
     },
@@ -485,6 +490,11 @@ export const translations = {
                 error_stats:          "Falha ao carregar estatísticas",
                 error_chart:          "Falha ao carregar dados de acesso",
                 error_server:         "Erro no servidor",
+            },
+            analytics_page: {
+                load_more:    "Carregar mais",
+                error_load:   "Falha ao carregar registos",
+                error_server: "Erro no servidor",
             },
         },
 
