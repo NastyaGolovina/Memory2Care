@@ -36,6 +36,7 @@ async function validateTaskType(task_type_name, type_desc, excludeId = null) {
     }
 }
 
+
 const createTaskType = async (data) => {
 
     const task_type_name   = data.task_type_name;
