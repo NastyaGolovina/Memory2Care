@@ -2,9 +2,28 @@ const prisma = require("../config/prismaClient.js");
 
 
 
-async function validateTaskType(task_type_name,type_desc) {
+// async function validateTaskType(task_type_name,type_desc) {
+//     const existing_task_type = await prisma.taskType.findFirst({
+//         where: { task_type_name: task_type_name },
+//     });
+//
+//     if (existing_task_type) throw new Error('Task type with this name already exist');
+//
+//     if (typeof task_type_name !== 'string' || task_type_name.length <= 0 || task_type_name.length > 225) {
+//         throw new Error('Invalid task type name');
+//     }
+//     if (typeof type_desc !== 'string' || type_desc.length <= 0 || type_desc.length > 225) {
+//         throw new Error('Invalid task type description');
+//     }
+// }
+
+
+async function validateTaskType(task_type_name, type_desc, excludeId = null) {
     const existing_task_type = await prisma.taskType.findFirst({
-        where: { task_type_name: task_type_name },
+        where: {
+            task_type_name: task_type_name,
+            ...(excludeId && { NOT: { task_type_id: excludeId } })
+        },
     });
 
     if (existing_task_type) throw new Error('Task type with this name already exist');
@@ -23,7 +42,7 @@ const createTaskType = async (data) => {
     const type_desc = data.type_desc;
 
 
-    validateTaskType(task_type_name,type_desc);
+    await validateTaskType(task_type_name,type_desc);
 
 
 
@@ -52,7 +71,7 @@ const updateTaskType = async (data) => {
 
     if (!existing_task_type) throw new Error('Task type not exist');
 
-    validateTaskType(task_type_name,type_desc);
+    await validateTaskType(task_type_name, type_desc, taskTypeId);
 
 
     const updatedTaskType = await prisma.taskType.update({
