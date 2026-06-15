@@ -159,7 +159,7 @@ export default function AccountPage() {
         },
         {
             key: "admin_caregivers",
-            label: t("admin.caregivers"),
+            label: t("admin.caregiver.approve_title"),
         },
         {
             key: "admin_analytics",
