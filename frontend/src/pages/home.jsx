@@ -19,7 +19,7 @@ const { Title, Text, Link } = Typography;
 
 const API_BASE = "http://localhost:3000/api/page/get";
 
-// ключи, которые нужны этой странице
+
 const ELEMENT_IDS = [
     "homepage_title",
     "homepage_subtitle",
