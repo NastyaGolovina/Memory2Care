@@ -8,7 +8,8 @@ export const translations = {
             contact: "Contact",
             language: "Language",
             account: "My Account",
-            participate: "Participate "
+            participate: "Participate ",
+
         },
         common: {
             edit: "Edit",
