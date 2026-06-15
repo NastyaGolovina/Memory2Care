@@ -7,7 +7,8 @@ export const translations = {
             news: "News",
             contact: "Contact",
             language: "Language",
-            account: "My Account"
+            account: "My Account",
+            participate: "Participate "
         },
         common: {
             edit: "Edit",
@@ -240,7 +241,8 @@ export const translations = {
             news: "Notícias",
             contact: "Contato",
             language: "Idioma",
-            account: "A minha conta"
+            account: "A minha conta",
+            participate: "Participar "
         },
         common: {
             edit: "Editar",
