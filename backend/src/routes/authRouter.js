@@ -4,7 +4,10 @@ const router = express.Router();
 const { signup, login, refresh, logout } = require('../controllers/authController');
 // const { authenticate } = require('../middleware/authMiddleware');
 
+const { forgotPassword, resetPasswordController } = require('../controllers/resetController');
 
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password',  resetPasswordController);
 router.post('/signup',  signup);
 router.post('/login',   login);
 router.post('/refresh', refresh);
