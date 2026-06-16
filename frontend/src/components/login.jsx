@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { useLang } from "../language/useLang.js";
 
 import { Button, Form, Input, Alert } from 'antd';
-
-
+import ForgotPassword from './ForgotPassword.jsx';
 
 
 
@@ -14,7 +13,7 @@ export default function Login({ setUser }) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [info, setInfo] = useState(null);
-
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
 
     const onFinish = async (values) => {
         setLoading(true);
@@ -88,7 +87,13 @@ export default function Login({ setUser }) {
         console.log(errorInfo);
     };
 
-
+    if (showForgotPassword) {
+        return (
+            <ForgotPassword
+                onBack={() => setShowForgotPassword(false)}
+            />
+        );
+    }
 
     return (
         <div
@@ -96,7 +101,7 @@ export default function Login({ setUser }) {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "50vh"
+                height: "59vh"
             }}
 
 
@@ -147,8 +152,19 @@ export default function Login({ setUser }) {
                     <Button type="primary" htmlType="submit" loading={loading}>
                         {t("login.submit")}
                     </Button>
+
+                    <div>
+                        <Button
+                            type="link"
+                            onClick={() => setShowForgotPassword(true)}
+                            style={{ paddingLeft: 0 }}
+                        >
+                            Forgot password?
+                        </Button>
+                    </div>
                 </Form.Item>
             </Form>
+
         </div>
     );
 }
