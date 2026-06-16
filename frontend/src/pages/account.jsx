@@ -391,7 +391,7 @@ export default function AccountPage() {
                 </Layout>
             </div>
             <Footer style={{ textAlign: 'center' }}>
-                Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                ©{new Date().getFullYear()} Memory2Care
             </Footer>
         </Layout>
     )
