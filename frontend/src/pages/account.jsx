@@ -18,6 +18,7 @@ import AdminApproveCaregiver from "../components/adminApproveCaregiver.jsx";
 import AdminUsers from "../components/adminUsers.jsx";
 import AdminDashboard from "../components/adminDashboard.jsx";
 import AdminAnalytics from "../components/adminAnalytics.jsx";
+import AdminWebDesign from "../components/adminWebDesignPage.jsx";
 
 import TaskCreate from "../components/createTask.jsx";
 
@@ -211,7 +212,7 @@ export default function AccountPage() {
                 return <AdminAnalytics user={user} setUser={setUser} handleAutoLogout={handleAutoLogout} />
 
             case "web_design":
-                return <div> {t("admin.web_design")}</div>
+                return <AdminWebDesign user={user} setUser={setUser} handleAutoLogout={handleAutoLogout}> </AdminWebDesign>
 
             default:
                 return <div>Not found</div>;
