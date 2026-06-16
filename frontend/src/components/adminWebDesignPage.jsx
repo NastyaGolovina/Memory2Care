@@ -18,7 +18,7 @@ import uptLogo    from "../assets/upt.png";
 import riseLogo   from "../assets/Logo-Rise-Health-Negat-Cor-300.png";
 import bgAsset    from "../assets/Asset-6fundo.png";
 import phoneImg   from "../assets/p2.png";
-import logo       from "../assets/logo-v2.png";
+import logo       from "../assets/memory2care_logo_very_light_purple.png";
 
 const { Title, Text, Link, Paragraph } = Typography;
 const { Content, Footer, Header } = Layout;

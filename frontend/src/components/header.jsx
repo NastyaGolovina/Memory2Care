@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Layout, Menu ,Dropdown, Space, Typography } from "antd";
 import { useLang } from "../language/useLang.js";
 import { DownOutlined } from '@ant-design/icons';
-import logo from "../assets/logo-v2.png";
+import logo from "../assets/memory2care_logo_very_light_purple.png";
 
 const { Header } = Layout;
 
