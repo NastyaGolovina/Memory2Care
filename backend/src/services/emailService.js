@@ -26,7 +26,6 @@ const sendContactEmail = async ({
             <p>${message.replace(/\n/g, '<br>')}</p>
         `,
     });
-    console.log(process.env.RESEND_API_KEY);
 };
 
 module.exports = { sendContactEmail };
