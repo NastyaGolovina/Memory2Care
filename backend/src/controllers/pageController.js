@@ -1,4 +1,4 @@
-const  { createPageArticle,updatePageArticle,getPageArticle }  = require("../services/pageService.js");
+const  { createPageArticle,updatePageArticle,getPageArticle, getNewsList, getNewsItem  }  = require("../services/pageService.js");
 const { successResponse, errorResponse } = require('../models/response');
 
 
@@ -36,5 +36,30 @@ async function getPageContent(req, res) {
 
 }
 
-module.exports = {createPageContent,updatePageContent,getPageContent };
+
+async function newsList(req, res) {
+    try {
+        const { language } = req.query;
+
+        const news = await getNewsList(language);
+
+        res.status(200).json(successResponse(news));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_NEWS_LIST_ERROR'));
+    }
+}
+
+async function newsItem(req, res) {
+    try {
+        const { news_id, language } = req.query;
+
+        const news = await getNewsItem(news_id, language);
+
+        res.status(200).json(successResponse(news));
+    } catch (err) {
+        res.status(400).json(errorResponse(err.message, 'GET_NEWS_ITEM_ERROR'));
+    }
+}
+
+module.exports = {createPageContent,updatePageContent,getPageContent,newsList,newsItem  };
 

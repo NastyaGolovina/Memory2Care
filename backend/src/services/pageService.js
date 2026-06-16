@@ -176,4 +176,59 @@ const getPageArticle = async (data) => {
 
 }
 
-module.exports = { createPageArticle,updatePageArticle,getPageArticle };
+
+const getNewsList = async (language) => {
+    if (!language) throw new Error('language is required');
+
+    const news = await prisma.siteContent.findMany({
+        where: {
+            page_type: "NEWS",
+            language: language,
+            element_id: { endsWith: "_title" }
+        },
+        orderBy: { news_date: "desc" }
+    });
+
+    return news.map(item => ({
+        id:     item.element_id.split("_")[1],
+        title:  item.text,
+        date:   item.news_date,
+        author: item.news_author,
+    }));
+};
+
+const getNewsItem = async (news_id, language) => {
+    if (!news_id) throw new Error('news_id is required');
+    if (!language) throw new Error('language is required');
+
+    const fields = ["title", "category", "short", "full", "url"];
+
+    const results = await Promise.all(
+        fields.map(field =>
+            prisma.siteContent.findFirst({
+                where: {
+                    element_id: `news_${news_id}_${field}`,
+                    language: language
+                }
+            })
+        )
+    );
+
+    const [title, category, short, full, url] = results;
+    if (!title) throw new Error('News item not found');
+
+    return {
+        id:       news_id,
+        title:    title.text,
+        category: category?.text ?? "",
+        short:    short?.text ?? "",
+        full:     full?.text ?? "",
+        url:      url?.text ?? "",
+        date:     title.news_date,
+        author:   title.news_author,
+    };
+};
+
+module.exports = { createPageArticle, updatePageArticle, getPageArticle, getNewsList, getNewsItem };
+
+// module.exports = { createPageArticle,updatePageArticle,getPageArticle };
