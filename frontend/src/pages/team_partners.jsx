@@ -21,9 +21,9 @@ const RESEARCHER_COUNT   = 6;
 const COLLABORATOR_COUNT = 1;
 const PARTNER_COUNT      = 3;
 
-// Логотипы партнёров по индексу (null = нет логотипа)
+
 const PARTNER_LOGOS = { 1: uptLogo, 2: null, 3: null };
-// Цвет аватара по тегу
+
 const TAG_COLORS = { PI: "blue", "Co-PI": "geekblue" };
 
 function buildElementIds() {
@@ -33,7 +33,7 @@ function buildElementIds() {
         "team_researchers_title", "team_researchers_intro",
         "team_collaborators_title", "team_collaborators_text",
         "team_funding_title", "team_funding_text",
-        // footer
+
         "footer_project_title", "footer_project_description",
         "footer_contact_title", "footer_contact_university",
         "footer_contact_address", "footer_contact_city",
@@ -164,7 +164,7 @@ export default function TeamPartnersPage() {
             <Content style={{ padding: "0 48px" }}>
                 <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
 
-                    {/* ── Partner Institutions ── */}
+
                     <Title>{ct("team_partners_title")}</Title>
                     <Paragraph style={{ fontSize: 16, marginBottom: 32 }}>{ct("team_partners_intro")}</Paragraph>
 
@@ -184,7 +184,7 @@ export default function TeamPartnersPage() {
                         ))}
                     </Row>
 
-                    {/* ── Partnership banner ── */}
+
                     <Card style={{ marginTop: 32, background: "#e6f4ff", border: "1px solid #91caff" }}>
                         <Title level={3} style={{ marginTop: 0 }}>{ct("team_partnership_title")}</Title>
                         <Text style={{ fontSize: 15 }}>{ct("team_partnership_text")}</Text>
@@ -192,7 +192,7 @@ export default function TeamPartnersPage() {
 
                     <Divider />
 
-                    {/* ── Research Team ── */}
+
                     <Title>{ct("team_researchers_title")}</Title>
                     <Paragraph style={{ fontSize: 15, marginBottom: 24 }}>{ct("team_researchers_intro")}</Paragraph>
 
@@ -206,7 +206,7 @@ export default function TeamPartnersPage() {
 
                     <Divider />
 
-                    {/* ── Collaborators ── */}
+
                     <Title level={2}>{ct("team_collaborators_title")}</Title>
                     <Paragraph style={{ fontSize: 15, marginBottom: 24 }}>{ct("team_collaborators_text")}</Paragraph>
 
@@ -220,7 +220,7 @@ export default function TeamPartnersPage() {
 
                     <Divider />
 
-                    {/* ── Funding ── */}
+
                     <Title level={2}>{ct("team_funding_title")}</Title>
                     <Card style={{ marginTop: 16 }}>
                         <Space size="large" align="center">

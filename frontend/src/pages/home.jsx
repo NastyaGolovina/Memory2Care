@@ -72,7 +72,7 @@ export default function HomePage() {
     const [content, setContent] = useState(null);
 
     useEffect(() => {
-        setContent(null); // показать спиннер при смене языка
+        setContent(null);
         fetchAllContent(lang).then(setContent);
     }, [lang]);
 
@@ -165,7 +165,7 @@ export default function HomePage() {
                 </div>
             </Content>
 
-            {/* ── Footer ── */}
+
             <div style={{ maxWidth: 1372, margin: "0 auto", width: "100%" }}>
                 <Footer
                     style={{
@@ -175,7 +175,7 @@ export default function HomePage() {
                     }}
                 >
                     <Row gutter={[32, 32]}>
-                        {/* Project info */}
+
                         <Col xs={24} md={8}>
                             <Title level={4} style={{ marginTop: 0 }}>
                                 {ct("footer_project_title")}
@@ -183,7 +183,7 @@ export default function HomePage() {
                             <Text type="secondary">{ct("footer_project_description")}</Text>
                         </Col>
 
-                        {/* Contact */}
+
                         <Col xs={24} md={8}>
                             <Title level={5}>{ct("footer_contact_title")}</Title>
                             <Space direction="vertical" size={4}>
@@ -196,7 +196,7 @@ export default function HomePage() {
                             </Space>
                         </Col>
 
-                        {/* Links */}
+
                         <Col xs={24} md={8}>
                             <Title level={5}>{ct("footer_links_title")}</Title>
                             <Space direction="vertical">
@@ -210,7 +210,7 @@ export default function HomePage() {
                     <Divider />
 
                     <Row gutter={[32, 24]}>
-                        {/* Promoter */}
+
                         <Col xs={24} md={12}>
                             <Title level={5}>{ct("footer_promoter_title")}</Title>
                             <Space size="large" wrap>
@@ -220,7 +220,7 @@ export default function HomePage() {
                             </Space>
                         </Col>
 
-                        {/* Funding */}
+
                         <Col xs={24} md={12}>
                             <Title level={5}>{ct("footer_funding_title")}</Title>
                             <Text type="secondary" style={{ display: "block", marginBottom: 10 }}>

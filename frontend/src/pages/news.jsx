@@ -60,14 +60,13 @@ async function fetchUI(lang) {
     return data;
 }
 
-// Получить список (только id + title + date)
+
 async function fetchNewsList(lang) {
     const res = await fetch(`${API_BASE}/list?language=${lang.toUpperCase()}`);
     const json = await res.json();
     return json?.data ?? [];
 }
 
-// Получить полную новость по id
 async function fetchNewsItem(id, lang) {
     const res = await fetch(`${API_BASE}/item?news_id=${id}&language=${lang.toUpperCase()}`);
     const json = await res.json();
@@ -102,7 +101,7 @@ export default function NewsPage() {
     const [detailLoading, setDetailLoading] = useState(false);
     const [pageLoading, setPageLoading]     = useState(true);
 
-    // Загружаем UI + список при смене языка
+
     useEffect(() => {
         setPageLoading(true);
         setSelected(null);
@@ -110,7 +109,7 @@ export default function NewsPage() {
         Promise.all([fetchUI(lang), fetchNewsList(lang)]).then(([uiData, list]) => {
             setUi(uiData);
             setNewsList(list);
-            // Автовыбор первой новости
+
             if (list.length > 0) loadDetail(list[0].id, lang);
             setPageLoading(false);
         });
@@ -145,7 +144,7 @@ export default function NewsPage() {
 
                     <Row gutter={[32, 24]}>
 
-                        {/* ── Left: список ── */}
+
                         <Col xs={24} lg={10}>
                             <Space direction="vertical" size={16} style={{ width: "100%" }}>
                                 {newsList.length === 0 && <Empty />}
@@ -192,7 +191,7 @@ export default function NewsPage() {
                             </Space>
                         </Col>
 
-                        {/* ── Right: детальная новость ── */}
+
                         <Col xs={24} lg={14}>
                             {detailLoading ? (
                                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 }}>
@@ -247,7 +246,7 @@ export default function NewsPage() {
                 </div>
             </Content>
 
-    
+
             <div style={{ maxWidth: 1372, margin: "0 auto", width: "100%" }}>
                 <Footer style={{ background: colorBgContainer, borderTop: "1px solid #f0f0f0", padding: "24px 48px" }}>
                     <Row gutter={[32, 32]}>
