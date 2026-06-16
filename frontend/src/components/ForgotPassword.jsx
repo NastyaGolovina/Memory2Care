@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-
 import { Form, Input, Button, Alert, Steps, Typography } from 'antd';
 import { MailOutlined, SafetyOutlined, LockOutlined } from '@ant-design/icons';
+import { useLang } from '../language/useLang.js';
 
 const { Title, Text } = Typography;
 
-const STEPS = [
-    { title: 'Email',   icon: <MailOutlined /> },
-    { title: 'Verify',  icon: <SafetyOutlined /> },
-    { title: 'Done',    icon: <LockOutlined /> },
-];
-
 export default function ForgotPassword({ onBack }) {
+    const { t } = useLang();
 
-    const [step, setStep]       = useState(0);
-    const [email, setEmail]     = useState('');
+    const STEPS = [
+        { title: t('forgot.step_email'),  icon: <MailOutlined /> },
+        { title: t('forgot.step_verify'), icon: <SafetyOutlined /> },
+        { title: t('forgot.step_done'),   icon: <LockOutlined /> },
+    ];
+
+    const [step,    setStep   ] = useState(0);
+    const [email,   setEmail  ] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState(null);
+    const [error,   setError  ] = useState(null);
     const [success, setSuccess] = useState(null);
 
     const onSendCode = async ({ email: inputEmail }) => {
@@ -50,7 +51,7 @@ export default function ForgotPassword({ onBack }) {
             });
             const data = await res.json();
             if (!data.success) throw new Error(data.error?.message || 'Error');
-            setSuccess('Password updated successfully!');
+            setSuccess(t('forgot.success_message'));
             setStep(2);
         } catch (err) {
             setError(err.message);
@@ -64,7 +65,7 @@ export default function ForgotPassword({ onBack }) {
             <div style={{ width: '100%', maxWidth: 460 }}>
 
                 <Title level={3} style={{ textAlign: 'center', marginBottom: 24 }}>
-                    Forgot Password
+                    {t('forgot.title')}
                 </Title>
 
                 <Steps
@@ -85,14 +86,15 @@ export default function ForgotPassword({ onBack }) {
                     />
                 )}
 
+                {/* ── Step 0: Email ── */}
                 {step === 0 && (
                     <Form layout="vertical" onFinish={onSendCode}>
                         <Form.Item
-                            label="Email address"
+                            label={t('forgot.email_label')}
                             name="email"
                             rules={[
-                                { required: true, message: 'Please enter your email' },
-                                { type: 'email',  message: 'Enter a valid email' },
+                                { required: true, message: t('forgot.email_required') },
+                                { type: 'email',  message: t('forgot.email_invalid')  },
                             ]}
                         >
                             <Input prefix={<MailOutlined />} placeholder="you@example.com" />
@@ -100,34 +102,35 @@ export default function ForgotPassword({ onBack }) {
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" loading={loading} block>
-                                Send verification code
+                                {t('forgot.btn_send_code')}
                             </Button>
                         </Form.Item>
 
                         <div style={{ textAlign: 'center' }}>
                             <Button type="link" onClick={onBack}>
-                                Back to Login
+                                {t('forgot.back_to_login')}
                             </Button>
                         </div>
                     </Form>
                 )}
 
+                {/* ── Step 1: Code + new password ── */}
                 {step === 1 && (
                     <>
                         <Alert
-                            message={`A 6-digit code was sent to ${email}`}
+                            message={`${t('forgot.code_sent_to')} ${email}`}
                             type="info"
                             showIcon
                             style={{ marginBottom: 16 }}
                         />
                         <Form layout="vertical" onFinish={onResetPassword}>
                             <Form.Item
-                                label="Verification code"
+                                label={t('forgot.code_label')}
                                 name="code"
                                 rules={[
-                                    { required: true, message: 'Please enter the code' },
-                                    { len: 6,         message: 'Code must be 6 digits' },
-                                    { pattern: /^\d+$/, message: 'Only digits allowed' },
+                                    { required: true, message: t('forgot.code_required') },
+                                    { len: 6,         message: t('forgot.code_length')   },
+                                    { pattern: /^\d+$/, message: t('forgot.code_digits') },
                                 ]}
                             >
                                 <Input
@@ -138,60 +141,57 @@ export default function ForgotPassword({ onBack }) {
                             </Form.Item>
 
                             <Form.Item
-                                label="New password"
+                                label={t('forgot.new_password_label')}
                                 name="newPassword"
                                 rules={[
-                                    { required: true, message: 'Please enter a new password' },
-                                    { min: 6,         message: 'At least 6 characters' },
+                                    { required: true, message: t('forgot.new_password_required') },
                                 ]}
                             >
-                                <Input.Password prefix={<LockOutlined />} placeholder="New password" />
+                                <Input.Password prefix={<LockOutlined />} placeholder={t('forgot.new_password_label')} />
                             </Form.Item>
 
                             <Form.Item
-                                label="Confirm password"
+                                label={t('forgot.confirm_password_label')}
                                 name="confirm"
                                 dependencies={['newPassword']}
                                 rules={[
-                                    { required: true, message: 'Please confirm your password' },
+                                    { required: true, message: t('forgot.confirm_required') },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (!value || getFieldValue('newPassword') === value) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error('Passwords do not match'));
+                                            return Promise.reject(new Error(t('forgot.passwords_mismatch')));
                                         },
                                     }),
                                 ]}
                             >
-                                <Input.Password prefix={<LockOutlined />} placeholder="Confirm password" />
+                                <Input.Password prefix={<LockOutlined />} placeholder={t('forgot.confirm_password_label')} />
                             </Form.Item>
 
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" loading={loading} block>
-                                    Reset password
+                                    {t('forgot.btn_reset')}
                                 </Button>
                             </Form.Item>
 
                             <div style={{ textAlign: 'center' }}>
                                 <Button type="link" onClick={() => { setStep(0); setError(null); }}>
-                                    ← Change email
+                                    {t('forgot.change_email')}
                                 </Button>
                             </div>
                         </Form>
                     </>
                 )}
 
+                {/* ── Step 2: Done ── */}
                 {step === 2 && (
                     <div style={{ textAlign: 'center' }}>
                         <Alert message={success} type="success" showIcon style={{ marginBottom: 24 }} />
-                        <Text type="secondary">You can now log in with your new password.</Text>
+                        <Text type="secondary">{t('forgot.success_hint')}</Text>
                         <br /><br />
-                        <Button
-                            type="primary"
-                            onClick={onBack}
-                        >
-                            Go to Login
+                        <Button type="primary" onClick={onBack}>
+                            {t('forgot.btn_go_login')}
                         </Button>
                     </div>
                 )}
