@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import React from 'react';
-import { useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import Login from "../components/login";
 import SignUp from "../components/singup.jsx";
 import { useLang } from "../language/useLang.js";
+import { useState, useEffect } from 'react';
 
 
 
@@ -52,6 +52,7 @@ const { Header, Content, Footer,
 
 
 
+
 export default function AccountPage() {
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("user");
@@ -88,11 +89,25 @@ export default function AccountPage() {
 
     // const [activeTab, setActiveTab] = useState("Log In");
     const [activeTab, setActiveTab] = useState("login");
+    // const [selectedKey, setSelectedKey] = useState(
+    //     user?.role === "ADMIN"
+    //         ? "admin_dashboard"
+    //         : "about"
+    // );
+
     const [selectedKey, setSelectedKey] = useState(
-        user?.role === "ADMIN"
-            ? "admin_dashboard"
-            : "about"
+        user?.role === "ADMIN" ? "admin_dashboard" : "about"
     );
+
+    useEffect(() => {
+        if (user?.role === "ADMIN") {
+            setSelectedKey("admin_dashboard");
+        } else {
+            setSelectedKey("about");
+        }
+    }, [user?.role]);
+
+
     const items2 = [
         {
             key: "about",

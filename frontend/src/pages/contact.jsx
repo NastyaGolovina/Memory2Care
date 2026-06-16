@@ -11,7 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useLang } from "../language/useLang.js";
 
-import gileadLogo from "../assets/Gilead-logo-footer.svg";
+import gileadLogo from "../assets/Gilead-logo-footer.png";
 import uptLogo    from "../assets/upt.png";
 import riseLogo   from "../assets/Logo-Rise-Health-Negat-Cor-300.png";
 import bgAsset    from "../assets/Asset-6fundo.png";
