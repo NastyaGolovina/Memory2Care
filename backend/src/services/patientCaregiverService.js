@@ -61,7 +61,8 @@ const createPatientCaregiver = async (data) => {
     if (!Object.values(RelationshipType).includes(relationship)) throw new Error('Invalid relationship type');
     if (!Object.values(SupportLevel).includes(supportLevel))     throw new Error('Invalid support level');
 
-    if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
+    // if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
+    if (!Number.isInteger(approxAge) || approxAge <= 0 || approxAge > 120) throw new Error('Invalid approximate age: must be between 1 and 120');
     if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
@@ -101,7 +102,8 @@ const updatePatientCaregiver = async (data) => {
     if (!patient_caregiver.active) throw new Error('Assignment is not active');
 
 
-    if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
+    // if (!Number.isInteger(approxAge) || approxAge <= 0) throw new Error('Invalid approximate age');
+    if (!Number.isInteger(approxAge) || approxAge <= 0 || approxAge > 120) throw new Error('Invalid approximate age: must be between 1 and 120');
     if (typeof anonName !== 'string' || anonName.length <= 0 || anonName.length > 225) throw new Error('Invalid anonymous name');
 
 
