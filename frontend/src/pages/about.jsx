@@ -170,7 +170,7 @@ export default function AboutPage() {
             </Content>
 
             {/* ── Footer ── */}
-            <div style={{ maxWidth: 1372, margin: "0 auto", width: "100%" }}>
+            <div style={{ margin: "0 48px" }}>
                 <Footer
                     style={{
                         background: colorBgContainer,

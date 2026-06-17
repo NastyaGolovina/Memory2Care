@@ -233,7 +233,7 @@ export default function TeamPartnersPage() {
             </Content>
 
             {/* ── Footer ── */}
-            <div style={{ maxWidth: 1372, margin: "0 auto", width: "100%" }}>
+            <div style={{ margin: "0 48px" }}>
                 <Footer style={{ background: colorBgContainer, borderTop: "1px solid #f0f0f0", padding: "24px 48px" }}>
                     <Row gutter={[32, 32]}>
                         <Col xs={24} md={8}>
