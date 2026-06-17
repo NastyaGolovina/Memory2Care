@@ -86,7 +86,7 @@ export default function ForgotPassword({ onBack }) {
                     />
                 )}
 
-                {/* ── Step 0: Email ── */}
+
                 {step === 0 && (
                     <Form layout="vertical" onFinish={onSendCode}>
                         <Form.Item
@@ -114,7 +114,7 @@ export default function ForgotPassword({ onBack }) {
                     </Form>
                 )}
 
-                {/* ── Step 1: Code + new password ── */}
+
                 {step === 1 && (
                     <>
                         <Alert
@@ -184,7 +184,7 @@ export default function ForgotPassword({ onBack }) {
                     </>
                 )}
 
-                {/* ── Step 2: Done ── */}
+
                 {step === 2 && (
                     <div style={{ textAlign: 'center' }}>
                         <Alert message={success} type="success" showIcon style={{ marginBottom: 24 }} />
