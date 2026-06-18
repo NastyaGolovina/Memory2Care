@@ -31,7 +31,7 @@ const ELEMENT_IDS = [
     "about_stage3_text",
     "about_stage4_title",
     "about_stage4_text",
-    // footer (уже есть в БД)
+
     "footer_project_title",
     "footer_project_description",
     "footer_contact_title",
@@ -200,7 +200,7 @@ export default function AboutPage() {
                             <Title level={5}>{ct("footer_links_title")}</Title>
                             <Space direction="vertical">
                                 <Link href="/about">{t("nav.about")}</Link>
-                                <Link href="/participate">{t("nav.account")}</Link>
+                                <Link href="/account">{t("nav.account")}</Link>
                                 <Link href="/contact">{t("nav.contact")}</Link>
                             </Space>
                         </Col>
