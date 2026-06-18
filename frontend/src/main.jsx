@@ -23,17 +23,17 @@ createRoot(document.getElementById('root')).render(
         <ConfigProvider
             theme={{
                 token: {
-                    colorPrimary:  "#7c5cbf",   // purple — кнопки, ссылки, активные элементы
-                    colorSuccess:  "#40c4b0",   // turquoise
-                    colorWarning:  "#d4a84b",   // gold/beige
-                    colorError:    "#eb6f92",   // pink
-                    colorBgBase:   "#fdfaf6",   // тёплый фон
+                    colorPrimary:  "#7c5cbf",
+                    colorSuccess:  "#40c4b0",
+                    colorWarning:  "#d4a84b",
+                    colorError:    "#eb6f92",
+                    colorBgBase:   "#fdfaf6",
                     borderRadius:  8,
 
-                    // ── Ссылки ──
-                    colorLink:      "#7c5cbf",   // обычная ссылка
-                    colorLinkHover: "#9b7dd4",   // при hover
-                    colorLinkActive:"#5a3fa0",   // при клике
+
+                    colorLink:      "#7c5cbf",
+                    colorLinkHover: "#9b7dd4",
+                    colorLinkActive:"#5a3fa0",
                 },
                 components: {
                     Layout: {
