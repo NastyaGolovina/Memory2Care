@@ -201,7 +201,7 @@ export default function HomePage() {
                             <Title level={5}>{ct("footer_links_title")}</Title>
                             <Space direction="vertical">
                                 <Link href="/about">{t("nav.about")}</Link>
-                                <Link href="/account">{t("nav.account")}</Link>
+                                <Link href="/team-partners">{t("nav.team_partners")}</Link>
                                 <Link href="/contact">{t("nav.contact")}</Link>
                             </Space>
                         </Col>
