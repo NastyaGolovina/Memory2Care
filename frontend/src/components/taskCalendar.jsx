@@ -10,6 +10,9 @@ import {
 import List from "antd/es/list";
 import Avatar from "antd/es/avatar";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 import { fetchWithAuth } from "../utils/fetchWithAuth.js";
 
 const { Title, Text } = Typography;
@@ -130,8 +133,8 @@ export default function TaskCalendar({ user }) {
             task_type_id:     task.task_type_id,
             task_description: task.task_description,
             time_range: [
-                dayjs(task.start_time),
-                dayjs(task.end_time),
+                dayjs.utc(task.start_time),
+                dayjs.utc(task.end_time),
             ],
         };
 
@@ -518,7 +521,8 @@ export default function TaskCalendar({ user }) {
                         ) : (
                             <List
                                 bordered
-                                dataSource={dayTasks.sort((a, b) => dayjs(a.start_time, "HH:mm:ss").unix() - dayjs(b.start_time, "HH:mm:ss").unix())}
+                                // dataSource={dayTasks.sort((a, b) => dayjs(a.start_time, "HH:mm:ss").unix() - dayjs(b.start_time, "HH:mm:ss").unix())}
+                                dataSource={dayTasks.sort((a, b) => dayjs.utc(a.start_time).unix() - dayjs.utc(b.start_time).unix())}
                                 renderItem={task => {
                                     const isCompleted = task.is_completed;
                                     const isOverdue   = !isCompleted && dayjs(task.execution_date).isBefore(dayjs(), "day");
@@ -533,7 +537,8 @@ export default function TaskCalendar({ user }) {
                                                         {task.task_type?.task_type_name || task.task_description}
                                         </span>
                                                 }
-                                                description={`${dayjs(task.start_time, "HH:mm:ss").format("HH:mm")} – ${dayjs(task.end_time, "HH:mm:ss").format("HH:mm")}`}
+                                                // description={`${dayjs(task.start_time, "HH:mm:ss").format("HH:mm")} – ${dayjs(task.end_time, "HH:mm:ss").format("HH:mm")}`}
+                                                description={`${dayjs.utc(task.start_time).format("HH:mm")} – ${dayjs.utc(task.end_time).format("HH:mm")}`}
                                             />
                                         </List.Item>
                                     );
